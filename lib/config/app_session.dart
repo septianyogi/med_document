@@ -28,21 +28,4 @@ class AppSession {
     return success;
   }
   
-  static Future<String?> getBearerToken() async {
-    final pref = await SharedPreferences.getInstance();
-    String? token = pref.getString('bearer_token');
-    return token;
-  }
-
-  static Future<bool> setBearerToken(String bearerToken) async {
-    final pref = await SharedPreferences.getInstance();
-    bool success = await pref.setString('bearer_token', bearerToken);
-    return success;
-  }
-
-  static Future<bool> removeBearerToken() async {
-    final pref = await SharedPreferences.getInstance();
-    bool success = await pref.remove('bearer_token');
-    return success;
-  }
 }

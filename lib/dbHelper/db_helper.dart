@@ -27,51 +27,55 @@ class DatabaseHelper {
 
   Future _createDB(Database db, int version) async {
     const userTable = '''
-    CREATE TABLE users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      rm TEXT NOT NULL,
-      name TEXT NOT NULL,
-      sex TEXT NOT NULL,
-      dob TEXT NOT NULL
-      address TEXT NOT NULL,
-    )
-    ''';
+  CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    rm TEXT NOT NULL,
+    name TEXT NOT NULL,
+    sex TEXT NOT NULL,
+    dob TEXT NOT NULL,
+    address TEXT NOT NULL,
+    synced INTEGER DEFAULT 0
+  )
+  ''';
 
     const doctorTable = '''
-    CREATE TABLE doctors (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      specialty TEXT NOT NULL
-    )
-    ''';
+  CREATE TABLE doctors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    specialty TEXT NOT NULL,
+    synced INTEGER DEFAULT 0
+  )
+  ''';
 
     const medicineTable = '''
-    CREATE TABLE medicines (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      dosage TEXT ,
-      frequency TEXT ,
-      controlId INTEGER ,
-      FOREIGN KEY (controlId) REFERENCES controls (id)
-    )
-    ''';
+  CREATE TABLE medicines (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    dosage TEXT,
+    frequency TEXT,
+    controlId INTEGER,
+    synced INTEGER DEFAULT 0,
+    FOREIGN KEY (controlId) REFERENCES controls (id)
+  )
+  ''';
 
     const controlTable = '''
-    CREATE TABLE controls (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER NOT NULL,
-      doctorId INTEGER NOT NULL,
-      medicineId INTEGER NOT NULL,
-      date TEXT ,
-      time TEXT,
-      description TEXT,
-      appointment TEXT,
-      rujuk INTEGER DEFAULT 0,
-      FOREIGN KEY (medicineId) REFERENCES medicines (id),
-      FOREIGN KEY (userId) REFERENCES users (id),
-      FOREIGN KEY (doctorId) REFERENCES doctors (id)
-    )
-    ''';
+  CREATE TABLE controls (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userId INTEGER NOT NULL,
+    doctorId INTEGER NOT NULL,
+    medicineId INTEGER NOT NULL,
+    date TEXT,
+    time TEXT,
+    description TEXT,
+    appointment TEXT,
+    rujuk INTEGER DEFAULT 0,
+    synced INTEGER DEFAULT 0,
+    FOREIGN KEY (medicineId) REFERENCES medicines (id),
+    FOREIGN KEY (userId) REFERENCES users (id),
+    FOREIGN KEY (doctorId) REFERENCES doctors (id)
+  )
+  ''';
 
     await db.execute(userTable);
     await db.execute(doctorTable);
@@ -194,7 +198,7 @@ class DatabaseHelper {
         whereArgs: [id],
       );
       print('Deleting doctor with id: $id');
-      return result;
+      return 1;
     } catch (e) {
       print('Error deleting doctor: $e');
       return 0;
