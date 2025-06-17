@@ -25,7 +25,7 @@ class Control {
     this.medicine = const [],
   });
 
-  factory Control.fromMap(Map<String, dynamic> map) {
+  factory Control.fromJson(Map<String, dynamic> map) {
     return Control(
       id: map['id'],
       userId: map['userId'],
@@ -39,14 +39,14 @@ class Control {
       medicine:
           (map['medicine'] as List<dynamic>?)
               ?.map(
-                (item) => MedicineModel.fromMap(item as Map<String, dynamic>),
+                (item) => MedicineModel.fromJson(item as Map<String, dynamic>),
               )
               .toList() ??
           [],
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'userId': userId,
@@ -57,7 +57,7 @@ class Control {
       'description': description,
       'appointment': appointment,
       'rujuk': rujuk,
-      'medicine': medicine.map((m) => m.toMap()).toList(),
+      'medicine': medicine.map((m) => m.toJson()).toList(),
     };
   }
 }

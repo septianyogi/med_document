@@ -15,7 +15,7 @@ class UserModel {
     required this.address,
   });
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
+  factory UserModel.fromJson(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'],
       rm: map['rm'],
@@ -26,7 +26,7 @@ class UserModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'rm': rm,

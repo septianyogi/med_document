@@ -88,8 +88,8 @@ class DatabaseHelper {
   Future<int> insertUser(UserModel user) async {
     try {
       final db = await database;
-      await db.insert('users', user.toMap());
-      print('Inserting user: ${user.toMap()}');
+      await db.insert('users', user.toJson());
+      print('Inserting user: ${user.toJson()}');
       return 1;
     } catch (e) {
       print('Error inserting user: $e');
@@ -105,7 +105,7 @@ class DatabaseHelper {
         print('No users found');
         return [];
       }
-      return users.map((e) => UserModel.fromMap(e)).toList();
+      return users.map((e) => UserModel.fromJson(e)).toList();
     } catch (e) {
       print('Error fetching users: $e');
       return [];
@@ -117,11 +117,11 @@ class DatabaseHelper {
       final db = await database;
       final result = await db.update(
         'users',
-        user.toMap(),
+        user.toJson(),
         where: 'id = ?',
         whereArgs: [user.id],
       );
-      print('Updating user: ${user.toMap()}');
+      print('Updating user: ${user.toJson()}');
       return result;
     } catch (e) {
       print('Error updating user: $e');
@@ -144,8 +144,8 @@ class DatabaseHelper {
   Future<int> insertDoctor(DoctorModel doctor) async {
     try {
       final db = await database;
-      await db.insert('doctors', doctor.toMap());
-      print('Inserting doctor: ${doctor.toMap()}');
+      await db.insert('doctors', doctor.toJson());
+      print('Inserting doctor: ${doctor.toJson()}');
       return 1;
     } catch (e) {
       print('Error inserting doctor: $e');
@@ -173,11 +173,11 @@ class DatabaseHelper {
       final db = await database;
       final result = await db.update(
         'doctors',
-        doctor.toMap(),
+        doctor.toJson(),
         where: 'id = ?',
         whereArgs: [doctor.id],
       );
-      print('Updating doctor: ${doctor.toMap()}');
+      print('Updating doctor: ${doctor.toJson()}');
       return result;
     } catch (e) {
       print('Error updating doctor: $e');
@@ -204,8 +204,8 @@ class DatabaseHelper {
   Future<int> insertMedicine(MedicineModel medicine) async {
     try {
       final db = await database;
-      await db.insert('medicines', medicine.toMap());
-      print('Inserting medicine: ${medicine.toMap()}');
+      await db.insert('medicines', medicine.toJson());
+      print('Inserting medicine: ${medicine.toJson()}');
       return 1;
     } catch (e) {
       print('Error inserting medicine: $e');
@@ -221,7 +221,7 @@ class DatabaseHelper {
         print('No medicines found');
         return [];
       }
-      return medicines.map((e) => MedicineModel.fromMap(e)).toList();
+      return medicines.map((e) => MedicineModel.fromJson(e)).toList();
     } catch (e) {
       print('Error fetching medicines: $e');
       return [];
@@ -233,11 +233,11 @@ class DatabaseHelper {
       final db = await database;
       final result = await db.update(
         'medicines',
-        medicine.toMap(),
+        medicine.toJson(),
         where: 'id = ?',
         whereArgs: [medicine.id],
       );
-      print('Updating medicine: ${medicine.toMap()}');
+      print('Updating medicine: ${medicine.toJson()}');
       return result;
     } catch (e) {
       print('Error updating medicine: $e');

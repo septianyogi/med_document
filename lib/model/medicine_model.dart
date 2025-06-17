@@ -13,7 +13,7 @@ class MedicineModel {
     this.userId,
   });
 
-  factory MedicineModel.fromMap(Map<String, dynamic> map) {
+  factory MedicineModel.fromJson(Map<String, dynamic> map) {
     return MedicineModel(
       id: map['id'],
       name: map['name'],
@@ -23,7 +23,7 @@ class MedicineModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
