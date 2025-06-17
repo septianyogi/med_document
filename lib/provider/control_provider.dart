@@ -34,12 +34,12 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
       if (!mounted) return;
       final control = ControlModel(
         userId: userId,
-        doctorId: doctorId,
-        date: date,
-        time: time,
-        description: description,
-        appointment: appointment,
-        rujuk: rujuk,
+        doctorId: doctorId ?? 0,
+        date: date ?? '',
+        time: time ?? '',
+        description: description ?? '',
+        appointment: appointment ?? '',
+        rujuk: rujuk ?? 0,
       );
       final result = await _databaseHelper.insertControl(control);
       if (result == 1) {

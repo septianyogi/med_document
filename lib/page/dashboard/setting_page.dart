@@ -45,6 +45,13 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                           color: AppColor.primaryTextColor,
                         ),
                       ),
+                      Text(
+                        'Name: ${data.id}',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppColor.primaryTextColor,
+                        ),
+                      ),
                       SizedBox(height: 10),
                       Text(
                         'Name: ${data.name}',

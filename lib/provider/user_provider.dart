@@ -28,6 +28,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   ) async {
     try {
       UserModel user = UserModel(
+        id: 1,
         rm: rm,
         name: name,
         sex: sex,
