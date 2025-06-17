@@ -1,3 +1,5 @@
+import 'package:med_document/model/control_model.dart';
+
 import '../model/doctor_model.dart';
 import '../model/user_model.dart';
 import 'package:path/path.dart';
@@ -64,14 +66,12 @@ class DatabaseHelper {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     userId INTEGER NOT NULL,
     doctorId INTEGER NOT NULL,
-    medicineId INTEGER NOT NULL,
     date TEXT,
     time TEXT,
     description TEXT,
     appointment TEXT,
     rujuk INTEGER DEFAULT 0,
     synced INTEGER DEFAULT 0,
-    FOREIGN KEY (medicineId) REFERENCES medicines (id),
     FOREIGN KEY (userId) REFERENCES users (id),
     FOREIGN KEY (doctorId) REFERENCES doctors (id)
   )
@@ -172,6 +172,25 @@ class DatabaseHelper {
     }
   }
 
+  Future<DoctorModel> getDoctorById(int id) async {
+    try {
+      final db = await database;
+      final doctor = await db.query(
+        'doctors',
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+      if (doctor.isEmpty) {
+        print('No doctor found with id: $id');
+        return DoctorModel(id: 0, name: '', specialty: '');
+      }
+      return DoctorModel.fromMap(doctor.first);
+    } catch (e) {
+      print('Error fetching doctor by id: $e');
+      return DoctorModel(id: 0, name: '', specialty: '');
+    }
+  }
+
   Future<int> updateDoctor(DoctorModel doctor) async {
     try {
       final db = await database;
@@ -232,6 +251,25 @@ class DatabaseHelper {
     }
   }
 
+  Future<List<MedicineModel>> getMedicineByControlId(int controlId) async {
+    try {
+      final db = await database;
+      final medicines = await db.query(
+        'medicines',
+        where: 'controlId = ?',
+        whereArgs: [controlId],
+      );
+      if (medicines.isEmpty) {
+        print('No medicines found for controlId: $controlId');
+        return [];
+      }
+      return medicines.map((e) => MedicineModel.fromJson(e)).toList();
+    } catch (e) {
+      print('Error fetching medicines by controlId: $e');
+      return [];
+    }
+  }
+
   Future<int> updateMedicine(MedicineModel medicine) async {
     try {
       final db = await database;
@@ -261,6 +299,66 @@ class DatabaseHelper {
       return result;
     } catch (e) {
       print('Error deleting medicine: $e');
+      return 0;
+    }
+  }
+
+  Future<int> insertControl(ControlModel control) async {
+    try {
+      final db = await database;
+      await db.insert('controls', control.toJson());
+      print('Inserting control: ${control.toJson()}');
+      return 1;
+    } catch (e) {
+      print('Error inserting control: $e');
+      return 0;
+    }
+  }
+
+  Future<List<ControlModel>> getControls() async {
+    try {
+      final db = await database;
+      final controls = await db.query('controls');
+      if (controls.isEmpty) {
+        print('No controls found');
+        return [];
+      }
+      return controls.map((e) => ControlModel.fromJson(e)).toList();
+    } catch (e) {
+      print('Error fetching controls: $e');
+      return [];
+    }
+  }
+
+  Future<int> updateControl(ControlModel control) async {
+    try {
+      final db = await database;
+      final result = await db.update(
+        'controls',
+        control.toJson(),
+        where: 'id = ?',
+        whereArgs: [control.id],
+      );
+      print('Updating control: ${control.toJson()}');
+      return 1;
+    } catch (e) {
+      print('Error updating control: $e');
+      return 0;
+    }
+  }
+
+  Future<int> deleteControl(int id) async {
+    try {
+      final db = await database;
+      final result = await db.delete(
+        'controls',
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+      print('Deleting control with id: $id');
+      return 1;
+    } catch (e) {
+      print('Error deleting control: $e');
       return 0;
     }
   }
