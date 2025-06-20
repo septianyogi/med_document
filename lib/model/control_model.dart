@@ -4,6 +4,7 @@ class ControlModel {
   int? id;
   int userId;
   int doctorId;
+  String? doctor;
   String? date;
   String? time;
   String? description;
@@ -15,6 +16,7 @@ class ControlModel {
     this.id,
     required this.userId,
     required this.doctorId,
+    this.doctor,
     this.date,
     this.time,
     this.description,

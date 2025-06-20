@@ -16,59 +16,63 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final controlState = ref.watch(controlProvider);
     return Scaffold(
+      backgroundColor: AppColor.backgroundPrimaryColor,
       appBar: AppBar(
         title: const Text('Control'),
         backgroundColor: AppColor.primaryColor,
       ),
-      body: controlState.when(
-        data: (data) {
-          if (data.isEmpty) {
-            return const Center(child: Text('Belum ada Data'));
-          }
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    final control = data[index];
-                    return ListTile(
-                      title: Text(control.date!),
-                      subtitle: Text(control.id!.toString()),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/controlForm',
-                                arguments: control,
-                              );
-                            },
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: controlState.when(
+          data: (data) {
+            if (data.isEmpty) {
+              return const Center(child: Text('Belum ada Data'));
+            }
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      final control = data[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColor.backgroundWhiteColor,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              // deleteDoctor(doctor.id!);
-                            },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 15,
+                            ),
+                            child: Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(control.date.toString()),
+                                    Text(control.doctorId.toString()),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                  itemCount: data.length,
+                        ),
+                      );
+                    },
+                    itemCount: data.length,
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
-        error: (e, StackTrace) {
-          return Center(child: Text(e.toString()));
-        },
-        loading: () {
-          return Center(child: CircularProgressIndicator());
-        },
+              ],
+            );
+          },
+          error: (e, StackTrace) {
+            return Center(child: Text(e.toString()));
+          },
+          loading: () {
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
