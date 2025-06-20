@@ -52,7 +52,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                           color: AppColor.primaryTextColor,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 5),
                       Text(
                         'Name: ${data.name}',
                         style: TextStyle(
@@ -60,7 +60,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                           color: AppColor.primaryTextColor,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 5),
                       Text(
                         'Tanggal Lahir: ${data.dob}',
                         style: TextStyle(
@@ -68,7 +68,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                           color: AppColor.primaryTextColor,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 5),
                       Text(
                         'Alamat: ${data.address}',
                         style: TextStyle(
@@ -76,7 +76,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                           color: AppColor.primaryTextColor,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 5),
                       Text(
                         'Jenis Kelamin: ${data.sex}',
                         style: TextStyle(

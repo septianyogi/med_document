@@ -45,42 +45,74 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
           if (data.isEmpty) {
             return const Center(child: Text('Belum ada doctor'));
           }
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    final doctor = data[index];
-                    return ListTile(
-                      title: Text(doctor.name),
-                      subtitle: Text(doctor.specialty!),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/doctorForm',
-                                arguments: doctor,
-                              );
-                            },
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      final doctor = data[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColor.backgroundWhiteColor,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              deleteDoctor(doctor.id!);
-                            },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 15,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        doctor.name,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                      Text(
+                                        doctor.specialty!,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: AppColor.royalBlue,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    deleteDoctor(doctor.id!);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: AppColor.error,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                  itemCount: data.length,
+                        ),
+                      );
+                    },
+                    itemCount: data.length,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
         error: (e, StackTrace) {
