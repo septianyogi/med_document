@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:med_document/config/app_color.dart';
 import 'package:med_document/page/add_control_page.dart';
 import 'package:med_document/provider/control_provider.dart';
@@ -48,11 +49,23 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ),
                             child: Row(
                               children: [
-                                Column(
-                                  children: [
-                                    Text(control.date.toString()),
-                                    Text(control.doctorId.toString()),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'dr. ${control.doctorName!}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 17),
+                                      ),
+                                      Text(
+                                        '${DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.parse(control.date!))} (${control.time})',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

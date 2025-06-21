@@ -23,7 +23,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
 
   Future<void> insertControl(
     int userId,
-    int doctorId,
+    String? doctorName,
     String? date,
     String? time,
     String? description,
@@ -34,7 +34,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
       if (!mounted) return;
       final control = ControlModel(
         userId: userId,
-        doctorId: doctorId ?? 0,
+        doctorName: doctorName ?? '',
         date: date ?? '',
         time: time ?? '',
         description: description ?? '',
@@ -58,7 +58,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
 
   Future<void> updateControl(
     int userId,
-    int doctorId,
+    String? doctorName,
     String? date,
     String? time,
     String? description,
@@ -69,7 +69,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
       if (!mounted) return;
       final control = ControlModel(
         userId: userId,
-        doctorId: doctorId,
+        doctorName: doctorName,
         date: date,
         time: time,
         description: description,

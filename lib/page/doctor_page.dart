@@ -74,7 +74,7 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        doctor.name,
+                                        'dr. ${doctor.name}',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: TextStyle(fontSize: 18),

@@ -65,15 +65,14 @@ class DatabaseHelper {
   CREATE TABLE controls (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     userId INTEGER NOT NULL,
-    doctorId INTEGER NOT NULL,
+    doctorName TEXT,
     date TEXT,
     time TEXT,
     description TEXT,
     appointment TEXT,
     rujuk INTEGER DEFAULT 0,
     synced INTEGER DEFAULT 0,
-    FOREIGN KEY (userId) REFERENCES users (id),
-    FOREIGN KEY (doctorId) REFERENCES doctors (id)
+    FOREIGN KEY (userId) REFERENCES users (id)
   )
   ''';
 

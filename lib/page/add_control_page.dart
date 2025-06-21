@@ -29,7 +29,7 @@ class _AddControlPageState extends ConsumerState<AddControlPage> {
 
   Future<void> insertControl() async {
     final userId = ref.read(userProvider).value?.id ?? 1;
-    final doctorId = int.parse(doctorController ?? '0');
+    final doctorName = doctorController ?? '';
     final date = currentDate;
     final time = timeController.text;
     final description = descriptionController.text;
@@ -40,7 +40,7 @@ class _AddControlPageState extends ConsumerState<AddControlPage> {
         .read(controlProvider.notifier)
         .insertControl(
           userId,
-          doctorId,
+          doctorName,
           date,
           time,
           description,
@@ -195,7 +195,7 @@ class _AddControlPageState extends ConsumerState<AddControlPage> {
                                       return data
                                           .map(
                                             (item) => DropdownMenuItem<String>(
-                                              value: item.id.toString(),
+                                              value: item.name,
                                               child: Text(
                                                 item.name,
                                                 maxLines: 1,
