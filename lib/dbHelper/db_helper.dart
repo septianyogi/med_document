@@ -54,6 +54,7 @@ class DatabaseHelper {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     dosage TEXT,
+    quantity INTEGER,
     frequency TEXT,
     controlId INTEGER,
     synced INTEGER DEFAULT 0,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:med_document/config/app_color.dart';
 import 'package:med_document/page/add_control_page.dart';
+import 'package:med_document/page/detail_control.dart';
 import 'package:med_document/provider/control_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -35,39 +36,51 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       final control = data[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColor.backgroundWhiteColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 15,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      DetailControlPage(control: control),
                             ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'dr. ${control.doctorName!}',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(fontSize: 17),
-                                      ),
-                                      Text(
-                                        '${DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.parse(control.date!))} (${control.time})',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ],
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColor.backgroundWhiteColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 15,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'dr. ${control.doctorName!}',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: TextStyle(fontSize: 17),
+                                        ),
+                                        Text(
+                                          '${DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.parse(control.date!))} (${control.time})',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
