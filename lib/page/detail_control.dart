@@ -15,7 +15,7 @@ class _DetailControlPageState extends State<DetailControlPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.backgroundPrimaryColor,
+      backgroundColor: AppColor.primaryColor,
       appBar: AppBar(
         backgroundColor: AppColor.primaryColor,
         title: Text(
@@ -31,112 +31,209 @@ class _DetailControlPageState extends State<DetailControlPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              height: 150,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 40,
+                ),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    children: [
+                      Icon(Icons.person, size: 50, color: Colors.white),
+                      SizedBox(height: 20),
+                      Text(
+                        'dr. ${widget.control.doctorName}',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             Stack(
               children: [
                 Container(
-                  height: 200,
+                  height: MediaQuery.of(context).size.height - 200,
                   decoration: BoxDecoration(
-                    color: AppColor.primaryColor,
+                    color: AppColor.backgroundPrimaryColor,
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 30,
-                    horizontal: 40,
+                    horizontal: 20,
+                    vertical: 20,
                   ),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Column(
-                      children: [
-                        Icon(Icons.person, size: 70, color: Colors.white),
-                        SizedBox(height: 20),
-                        Text(
-                          'dr. ${widget.control.doctorName}',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 10,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: AppColor.backgroundWhiteColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Waktu Kontrol',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: AppColor.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.date_range,
+                                    size: 20,
+                                    color: AppColor.primaryColor,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'Tanggal ${AppFormat.Date(widget.control.date!)}',
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      color: AppColor.primaryTextColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.watch_later_outlined,
+                                    size: 20,
+                                    color: AppColor.primaryColor,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'Pukul ${widget.control.time}',
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      color: AppColor.primaryTextColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 10,
-                children: [
-                  Text(
-                    'Tanggal: ${AppFormat.Date(widget.control.date!)}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: AppColor.primaryTextColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    'Waktu: ${widget.control.time}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: AppColor.primaryTextColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    'Deskripsi: ${widget.control.description}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: AppColor.primaryTextColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    'Rujuk: ${widget.control.rujuk == 1 ? "Ya" : "Tidak"}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: AppColor.primaryTextColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  if (widget.control.appointment != null &&
-                      widget.control.appointment!.isNotEmpty)
-                    Text(
-                      'Janji: ${widget.control.appointment}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: AppColor.primaryTextColor,
-                        fontWeight: FontWeight.w500,
                       ),
-                    ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Obat',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: AppColor.primaryTextColor,
-                          fontWeight: FontWeight.w500,
+
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: AppColor.backgroundWhiteColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Deskripsi',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: AppColor.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                '${widget.control.description}',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: AppColor.primaryTextColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Icon(Icons.add, size: 20, weight: 5),
+                      if (widget.control.appointment != null &&
+                          widget.control.appointment!.isNotEmpty)
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: AppColor.backgroundWhiteColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Rujuk Internal',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: AppColor.primaryColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  '${widget.control.appointment}',
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    color: AppColor.primaryTextColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Obat',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: AppColor.primaryTextColor,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: Icon(Icons.add, size: 20, weight: 5),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
