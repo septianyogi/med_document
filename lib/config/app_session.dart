@@ -28,4 +28,41 @@ class AppSession {
     return success;
   }
   
+  static Future<String?> getAccessToken() async {
+    final pref = await SharedPreferences.getInstance();
+    String? token = pref.getString('accessToken');
+    return token;
+  }
+
+  static Future<bool> setAccessToken(String accessToken) async {
+    final pref = await SharedPreferences.getInstance();
+    bool success = await pref.setString('accessToken', accessToken);
+    return success;
+  }
+
+  static Future<bool> removeAccessToken() async {
+    final pref = await SharedPreferences.getInstance();
+    bool success = await pref.remove('accessToken');
+    return success;
+  }
+
+
+  // Refresh Token 
+  static Future<String?> getRefreshToken() async {
+    final pref = await SharedPreferences.getInstance();
+    String? token = pref.getString('refreshToken');
+    return token;
+  }
+
+  static Future<bool> setRefreshToken(String refreshToken) async {
+    final pref = await SharedPreferences.getInstance();
+    bool success = await pref.setString('refreshToken', refreshToken);
+    return success;
+  }
+
+  static Future<bool> removeRefreshToken() async {
+    final pref = await SharedPreferences.getInstance();
+    bool success = await pref.remove('refreshToken');
+    return success;
+  }
 }
