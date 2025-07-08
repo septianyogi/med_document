@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_document/config/app_color.dart';
 import 'package:med_document/config/app_format.dart';
 import 'package:med_document/model/control_model.dart';
+import 'package:med_document/model/medicine_model.dart';
+import 'package:med_document/page/add_medicine_page.dart';
+import 'package:med_document/provider/medicine_provider.dart';
 
-class DetailControlPage extends StatefulWidget {
+class DetailControlPage extends ConsumerStatefulWidget {
   const DetailControlPage({super.key, required this.control});
   final ControlModel control;
 
   @override
-  State<DetailControlPage> createState() => _DetailControlPageState();
+  ConsumerState<DetailControlPage> createState() => _DetailControlPageState();
 }
 
-class _DetailControlPageState extends State<DetailControlPage> {
+class _DetailControlPageState extends ConsumerState<DetailControlPage> {
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref
+          .read(medicineProvider.notifier)
+          .getMedicineByControlId(widget.control.id!);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final medicineState = ref.watch(medicineProvider);
     return Scaffold(
       backgroundColor: AppColor.primaryColor,
       appBar: AppBar(
@@ -213,22 +228,110 @@ class _DetailControlPageState extends State<DetailControlPage> {
                             ),
                           ),
                         ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Obat',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: AppColor.primaryTextColor,
-                              fontWeight: FontWeight.w500,
-                            ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: AppColor.backgroundWhiteColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
                           ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: Icon(Icons.add, size: 20, weight: 5),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Obat',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: AppColor.primaryColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColor.primaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => AddMedicinePage(
+                                                controlId: widget.control.id!,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 20,
+                                      weight: 5,
+                                      color: AppColor.whiteColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              medicineState.when(
+                                data: (data) {
+                                  if (data.isEmpty) {
+                                    return Center(
+                                      child: Text(
+                                        'Tidak ada obat',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: AppColor.primaryTextColor,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: data.length,
+                                    itemBuilder: (context, index) {
+                                      final medicine = data[index];
+                                      return ListTile(
+                                        title: Text(
+                                          medicine.name!,
+                                          style: const TextStyle(
+                                            fontSize: 17,
+                                            color: AppColor.primaryTextColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          'Dosis: ${medicine.dosage}, Frekuensi: ${medicine.frequency} x 1',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: AppColor.primaryTextColor,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                error: (error, StackTrace) {
+                                  return Container();
+                                },
+                                loading:
+                                    () => const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),

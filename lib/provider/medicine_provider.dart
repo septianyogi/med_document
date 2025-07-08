@@ -99,3 +99,8 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
     }
   }
 }
+
+final medicineProvider =
+    StateNotifierProvider<MedicineNotifier, AsyncValue<List<MedicineModel>>>(
+      (ref) => MedicineNotifier(),
+    );
