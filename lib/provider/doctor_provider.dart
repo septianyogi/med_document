@@ -20,11 +20,11 @@ class DoctorNotifier extends StateNotifier<AsyncValue<List<DoctorModel>>> {
     }
   }
 
-  Future<void> insertDoctor(String name, String specialty) async {
+  Future<void> insertDoctor(String name, String specialty, int synced) async {
     try {
       if (!mounted) return;
 
-      final doctor = DoctorModel(name: name, specialty: specialty);
+      final doctor = DoctorModel(name: name, specialty: specialty, synced: synced == 1);
       final result = await _databaseHelper.insertDoctor(doctor);
       if (result == 1) {
         final doctors = await _databaseHelper.getDoctors();
@@ -35,13 +35,28 @@ class DoctorNotifier extends StateNotifier<AsyncValue<List<DoctorModel>>> {
     } catch (e) {}
   }
 
-  Future<void> updateDoctor(int id, String name, String specialty) async {
+  Future<void> updateDoctor(int id, String name, String specialty, int synced) async {
     try {
       if (!mounted) return;
 
-      final doctor = DoctorModel(id: id, name: name, specialty: specialty);
+      final doctor = DoctorModel(id: id, name: name, specialty: specialty, synced: synced == 1);
       final result = await _databaseHelper.updateDoctor(doctor);
       if (result > 0) {
+        final doctors = await _databaseHelper.getDoctors();
+        state = AsyncValue.data(doctors);
+      } else {
+        state = AsyncValue.error('Failed to update doctor', StackTrace.current);
+      }
+    } catch (e) {
+      state = AsyncValue.error(e.toString(), StackTrace.current);
+    }
+  }
+
+  Future<void> updateDoctorSync(int id) async {
+    try {
+      if (!mounted) return;
+      final result = await _databaseHelper.updateDoctorSync(id);
+      if (result == 1) {
         final doctors = await _databaseHelper.getDoctors();
         state = AsyncValue.data(doctors);
       } else {

@@ -165,7 +165,7 @@ class DatabaseHelper {
         print('No doctors found');
         return [];
       }
-      return doctors.map((e) => DoctorModel.fromMap(e)).toList();
+      return doctors.map((e) => DoctorModel.fromJson(e)).toList();
     } catch (e) {
       print('Error fetching doctors: $e');
       return [];
@@ -182,12 +182,12 @@ class DatabaseHelper {
       );
       if (doctor.isEmpty) {
         print('No doctor found with id: $id');
-        return DoctorModel(id: 0, name: '', specialty: '');
+        return DoctorModel(id: 0, name: '', specialty: '', synced: false);
       }
-      return DoctorModel.fromMap(doctor.first);
+      return DoctorModel.fromJson(doctor.first);
     } catch (e) {
       print('Error fetching doctor by id: $e');
-      return DoctorModel(id: 0, name: '', specialty: '');
+      return DoctorModel(id: 0, name: '', specialty: '', synced: false);
     }
   }
 
@@ -204,6 +204,24 @@ class DatabaseHelper {
       return result;
     } catch (e) {
       print('Error updating doctor: $e');
+      return 0;
+    }
+  }
+
+  Future<int> updateDoctorSync(int id) async {
+    try {
+      final db = await database;
+      final result = await db.update(
+        'doctors',
+        {'synced': 1},
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+      print('Updating doctor sync status for id: $id');
+      print('Result: $result');
+      return 1;
+    } catch (e) {
+      print('Error updating doctor sync status: $e');
       return 0;
     }
   }

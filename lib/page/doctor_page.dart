@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_document/page/add_doctor_page.dart';
 import 'package:med_document/provider/doctor_provider.dart';
+import 'package:med_document/provider/supabase/doctor_supabase_provider.dart';
 import 'package:med_document/widget/alert_dialog.dart';
 
 import '../config/app_color.dart';
@@ -14,6 +15,23 @@ class DoctorPage extends ConsumerStatefulWidget {
 }
 
 class _DoctorPageState extends ConsumerState<DoctorPage> {
+  // deleteDoctor(int id) {
+  //   showAlertDialog(
+  //     context: context,
+  //     title: 'Hapus',
+  //     content: 'Apakah anda yakin ingin menghapus dokter ini?',
+  //     isConfirm: true,
+  //     onConfirm: () {
+  //       ref.read(doctorProvider.notifier).deleteDoctor(id).then((_) {
+  //         setState(() {
+  //           ref.read(doctorProvider.notifier).getDoctor();
+  //         });
+  //       });
+  //       Navigator.pop(context);
+  //     },
+  //   );
+  // }
+
   deleteDoctor(int id) {
     showAlertDialog(
       context: context,
@@ -21,9 +39,9 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
       content: 'Apakah anda yakin ingin menghapus dokter ini?',
       isConfirm: true,
       onConfirm: () {
-        ref.read(doctorProvider.notifier).deleteDoctor(id).then((_) {
+        ref.read(doctorSupabaseProvider.notifier).deleteDoctor(id).then((_) {
           setState(() {
-            ref.read(doctorProvider.notifier).getDoctor();
+            ref.read(doctorSupabaseProvider.notifier).getDoctor();
           });
         });
         Navigator.pop(context);
@@ -31,9 +49,23 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
     );
   }
 
+  addDoctor(int id, String name, String specialty) {
+    ref.read(doctorSupabaseProvider.notifier).insertDoctor(name, specialty);
+    ref.read(doctorProvider.notifier).updateDoctorSync(id);
+    setState(() {
+      ref.read(doctorProvider.notifier).getDoctor();
+    });
+  }
+
+  @override
+  void initState() {
+    ref.read(doctorSupabaseProvider.notifier).getDoctor();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final doctorState = ref.watch(doctorProvider);
+    final doctorState = ref.watch(doctorSupabaseProvider);
     return Scaffold(
       backgroundColor: AppColor.backgroundPrimaryColor,
       appBar: AppBar(
@@ -42,15 +74,16 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
       ),
       body: doctorState.when(
         data: (data) {
-          if (data.isEmpty) {
-            return const Center(child: Text('Belum ada doctor'));
-          }
+          // if (data.isEmpty) {
+          //   return const Center(child: Text('Belum ada doctor'));
+          // }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
                 Expanded(
                   child: ListView.builder(
+                    itemCount: data.length,
                     itemBuilder: (context, index) {
                       final doctor = data[index];
                       return Padding(
@@ -65,50 +98,85 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                               horizontal: 10,
                               vertical: 15,
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'dr. ${doctor.name}',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(fontSize: 18),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${doctor.name}',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                doctor.specialty!,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        doctor.specialty!,
-                                        style: TextStyle(fontSize: 16),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: AppColor.royalBlue,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        deleteDoctor(doctor.id!);
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: AppColor.error,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.edit,
-                                    color: AppColor.royalBlue,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    deleteDoctor(doctor.id!);
-                                  },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: AppColor.error,
-                                  ),
-                                ),
+                                // doctor.synced == true
+                                //     ? Container()
+                                //     : ElevatedButton(
+                                //       onPressed: () {
+                                //         addDoctor(
+                                //           doctor.id!,
+                                //           doctor.name,
+                                //           doctor.specialty!,
+                                //         );
+                                //       },
+                                //       style: ElevatedButton.styleFrom(
+                                //         backgroundColor: AppColor.primaryColor,
+                                //         shape: RoundedRectangleBorder(
+                                //           borderRadius: BorderRadius.circular(
+                                //             15,
+                                //           ),
+                                //         ),
+                                //         padding: const EdgeInsets.all(10),
+                                //       ),
+                                //       child: Text(
+                                //         'Synchronize',
+                                //         style: TextStyle(
+                                //           color: AppColor.secondaryTextColor,
+                                //         ),
+                                //       ),
+                                //     ),
                               ],
                             ),
                           ),
                         ),
                       );
                     },
-                    itemCount: data.length,
                   ),
                 ),
               ],
@@ -131,13 +199,13 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
 
           if (value == true) {
             setState(() {
-              ref.read(doctorProvider.notifier).getDoctor();
+              ref.read(doctorSupabaseProvider.notifier).getDoctor();
             });
           }
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        backgroundColor: Colors.green,
-        child: Icon(Icons.add),
+        backgroundColor: AppColor.primaryColor,
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

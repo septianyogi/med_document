@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_document/config/app_color.dart';
 import 'package:med_document/provider/doctor_provider.dart';
+import 'package:med_document/provider/supabase/doctor_supabase_provider.dart';
 
 class AddDoctorPage extends ConsumerStatefulWidget {
   const AddDoctorPage({super.key});
@@ -15,15 +16,23 @@ class _AddDoctorPageState extends ConsumerState<AddDoctorPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController specialtyController = TextEditingController();
 
-  Future<void> insertDoctor() async {
-    if (_formKey.currentState!.validate()) {
-      final name = nameController.text.trim();
-      final specialty = specialtyController.text.trim();
+  // Future<void> insertDoctor() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     final name = nameController.text.trim();
+  //     final specialty = specialtyController.text.trim();
 
-      await ref.read(doctorProvider.notifier).insertDoctor(name, specialty);
+  //     await ref.read(doctorProvider.notifier).insertDoctor(name, specialty, 0);
 
-      Navigator.pop(context, true); // Kembali ke halaman sebelumnya
-    }
+  //     Navigator.pop(context, true); // Kembali ke halaman sebelumnya
+  //   }
+  // }
+
+  insertDoctor() {
+    final name = nameController.text.trim();
+    final specialty = specialtyController.text.trim();
+    ref.read(doctorSupabaseProvider.notifier).insertDoctor(name, specialty);
+
+    Navigator.pop(context, true);
   }
 
   @override

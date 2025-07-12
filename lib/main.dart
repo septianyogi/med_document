@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:med_document/page/dashboard/dashboard.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
+  String supabaseUrl = dotenv.env['SUPABASE_URL'] ?? '';
+  String supabaseAnonKey = dotenv.env['SUPABASE_API_KEY'] ?? '';
+  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+  
   runApp(const ProviderScope(child: MyApp()));
 }
 
