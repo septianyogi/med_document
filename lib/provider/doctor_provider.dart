@@ -1,10 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:med_document/datasource/supabase/doctor_supabase.dart';
 import 'package:med_document/dbHelper/db_helper.dart';
 import 'package:med_document/model/doctor_model.dart';
+import 'package:uuid/uuid.dart';
 
 class DoctorNotifier extends StateNotifier<AsyncValue<List<DoctorModel>>> {
   DoctorNotifier() : super(const AsyncValue.loading());
 
+  final DoctorSupabase _doctorSupabase = DoctorSupabase();
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
   Future<void> getDoctor() async {
     try {
@@ -20,26 +24,82 @@ class DoctorNotifier extends StateNotifier<AsyncValue<List<DoctorModel>>> {
     }
   }
 
-  Future<void> insertDoctor(String name, String specialty, int synced) async {
+  Future<void> insertDoctor(String name, String specialty) async {
     try {
       if (!mounted) return;
+      String uuId = Uuid().v4();
+      final supabase = await _doctorSupabase.addDoctors(uuId, name, specialty);
 
-      final doctor = DoctorModel(name: name, specialty: specialty, synced: synced == 1);
-      final result = await _databaseHelper.insertDoctor(doctor);
-      if (result == 1) {
-        final doctors = await _databaseHelper.getDoctors();
-        state = AsyncValue.data(doctors);
-      } else {
-        state = AsyncValue.error('Failed to insert doctor', StackTrace.current);
-      }
+      supabase.fold(
+        (failure) async {
+          print('Failed to add doctor to Supabase');
+          final result = await _databaseHelper.insertDoctor(
+            DoctorModel(
+              uuId: uuId,
+              name: name,
+              specialty: specialty,
+              synced: false,
+            ),
+          );
+          if (result == true) {
+            print('Doctor added successfully to local database');
+            final doctors = await _databaseHelper.getDoctors();
+            state = AsyncValue.data(doctors);
+          } else {
+            print('Failed to insert doctor to local database');
+            state = AsyncValue.error(
+              'Failed to insert doctor',
+              StackTrace.current,
+            );
+          }
+        },
+        (result) async {
+          if (result == true) {
+            print('Doctor added successfully to Supabase');
+            // Insert to local database
+            final result = await _databaseHelper.insertDoctor(
+              DoctorModel(
+                uuId: uuId,
+                name: name,
+                specialty: specialty,
+                synced: true,
+              ),
+            );
+            if (result == true) {
+              print('Doctor added successfully to local database');
+              // Refresh the state with updated doctors
+              final doctors = await _databaseHelper.getDoctors();
+              state = AsyncValue.data(doctors);
+            } else {
+              print('Failed to insert doctor to local database');
+              state = AsyncValue.error(
+                'Failed to insert doctor',
+                StackTrace.current,
+              );
+            }
+          }
+        },
+      );
+      if (supabase == true) {
+      } else {}
     } catch (e) {}
   }
 
-  Future<void> updateDoctor(int id, String name, String specialty, int synced) async {
+  Future<void> updateDoctor(
+    int id,
+    String name,
+    String specialty,
+    int synced,
+  ) async {
     try {
       if (!mounted) return;
 
-      final doctor = DoctorModel(id: id, name: name, specialty: specialty, synced: synced == 1);
+      final doctor = DoctorModel(
+        id: id,
+        name: name,
+        specialty: specialty,
+        synced: synced == 1,
+      );
       final result = await _databaseHelper.updateDoctor(doctor);
       if (result > 0) {
         final doctors = await _databaseHelper.getDoctors();
@@ -52,10 +112,10 @@ class DoctorNotifier extends StateNotifier<AsyncValue<List<DoctorModel>>> {
     }
   }
 
-  Future<void> updateDoctorSync(int id) async {
+  Future<void> updateDoctorSync(String uuId) async {
     try {
       if (!mounted) return;
-      final result = await _databaseHelper.updateDoctorSync(id);
+      final result = await _databaseHelper.updateDoctorSync(uuId);
       if (result == 1) {
         final doctors = await _databaseHelper.getDoctors();
         state = AsyncValue.data(doctors);
@@ -67,10 +127,10 @@ class DoctorNotifier extends StateNotifier<AsyncValue<List<DoctorModel>>> {
     }
   }
 
-  Future<void> deleteDoctor(int id) async {
+  Future<void> deleteDoctor(String uuId) async {
     try {
       if (!mounted) return;
-      final result = await _databaseHelper.deleteDoctor(id);
+      final result = await _databaseHelper.deleteDoctor(uuId);
       if (result == 1) {
         final doctors = await _databaseHelper.getDoctors();
         state = AsyncValue.data(doctors);

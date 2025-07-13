@@ -16,24 +16,22 @@ class _AddDoctorPageState extends ConsumerState<AddDoctorPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController specialtyController = TextEditingController();
 
-  // Future<void> insertDoctor() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     final name = nameController.text.trim();
-  //     final specialty = specialtyController.text.trim();
+  Future<void> insertDoctor() async {
+    if (_formKey.currentState!.validate()) {
+      final name = nameController.text.trim();
+      final specialty = specialtyController.text.trim();
 
-  //     await ref.read(doctorProvider.notifier).insertDoctor(name, specialty, 0);
+      await ref.read(doctorProvider.notifier).insertDoctor(name, specialty);
 
-  //     Navigator.pop(context, true); // Kembali ke halaman sebelumnya
-  //   }
-  // }
-
-  insertDoctor() {
-    final name = nameController.text.trim();
-    final specialty = specialtyController.text.trim();
-    ref.read(doctorSupabaseProvider.notifier).insertDoctor(name, specialty);
-
-    Navigator.pop(context, true);
+      Navigator.pop(context, true); // Kembali ke halaman sebelumnya
+    }
   }
+
+  // insertDoctorToSupabase() {
+  //   final name = nameController.text.trim();
+  //   final specialty = specialtyController.text.trim();
+  //   ref.read(doctorSupabaseProvider.notifier).insertDoctor(name, specialty);
+  // }
 
   @override
   void dispose() {

@@ -8,18 +8,20 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class DoctorSupabase {
   final supabase = Supabase.instance.client;
 
-  Future<Either<Failure, List>> addDoctors(
+  Future<Either<Failure, bool>> addDoctors(
+    String uuId,
     String name,
     String specialty,
   ) async {
     try {
       await supabase.from('doctors').insert({
+        'uuId' : uuId,
         'name': name,
         'specialty': specialty,
       });
 
       print('Doctor added successfully');
-      return Right([]);
+      return Right(true);
     } catch (e) {
       print('Error adding doctor: $e');
       if (e is Failure) {
@@ -46,11 +48,11 @@ class DoctorSupabase {
     }
   }
 
-  Future<Either<Failure, List>> deleteDoctor(int id) async {
+  Future<Either<Failure, bool>> deleteDoctor(String uuId) async {
     try {
-      await supabase.from('doctors').delete().eq('id', id);
-      print('Doctor with id $id deleted successfully');
-      return const Right([]);
+      await supabase.from('doctors').delete().eq('uuId', uuId);
+      print('Doctor with id $uuId deleted successfully');
+      return const Right(true);
     } catch (e) {
       print('Error deleting doctor: $e');
       if (e is Failure) {

@@ -2,6 +2,7 @@ import 'package:med_document/model/medicine_model.dart';
 
 class ControlModel {
   int? id;
+  String? uuId;
   int userId;
   String? doctorName;
   String? date;
@@ -13,6 +14,7 @@ class ControlModel {
 
   ControlModel({
     this.id,
+    this.uuId,
     required this.userId,
     this.doctorName,
     this.date,
@@ -26,6 +28,7 @@ class ControlModel {
   factory ControlModel.fromJson(Map<String, dynamic> map) {
     return ControlModel(
       id: map['id'],
+      uuId: map['uuId'],
       userId: map['userId'],
       doctorName: map['doctorName'],
       date: map['date'],
@@ -46,6 +49,7 @@ class ControlModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'uuId': uuId,
       'userId': userId,
       'doctorName': doctorName,
       'date': date,

@@ -1,5 +1,6 @@
 class MedicineModel {
   int? id;
+  String? uuId;
   String? name;
   String? dosage;
   String? frequency;
@@ -7,6 +8,7 @@ class MedicineModel {
 
   MedicineModel({
     this.id,
+    this.uuId,
     this.name,
     this.dosage,
     this.frequency,
@@ -16,6 +18,7 @@ class MedicineModel {
   factory MedicineModel.fromJson(Map<String, dynamic> map) {
     return MedicineModel(
       id: map['id'],
+      uuId: map['uuId'],
       name: map['name'],
       dosage: map['dosage'],
       frequency: map['frequency'],
@@ -26,6 +29,7 @@ class MedicineModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'uuId': uuId,
       'name': name,
       'dosage': dosage,
       'frequency': frequency,

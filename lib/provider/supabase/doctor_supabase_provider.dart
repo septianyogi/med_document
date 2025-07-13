@@ -9,10 +9,10 @@ class DocotorSupabaseNotifier
 
   final DoctorSupabase _doctorSupabase = DoctorSupabase();
 
-  Future<void> insertDoctor(String name, String specialty) async {
+  Future<void> insertDoctor(String uuId, String name, String specialty) async {
     try {
       if (!mounted) return;
-      final doctors = await _doctorSupabase.addDoctors(name, specialty);
+      final doctors = await _doctorSupabase.addDoctors(uuId, name, specialty);
       doctors.fold(
         (failure) {
           return state = AsyncError(
@@ -56,10 +56,10 @@ class DocotorSupabaseNotifier
     }
   }
 
-  Future<void> deleteDoctor(int id) async {
+  Future<void> deleteDoctor(String uuId) async {
     try {
       if (!mounted) return;
-      final result = await _doctorSupabase.deleteDoctor(id);
+      final result = await _doctorSupabase.deleteDoctor(uuId);
       result.fold(
         (failure) {
           return state = AsyncError(
@@ -68,7 +68,7 @@ class DocotorSupabaseNotifier
           );
         },
         (result) {
-          print('Doctor with id $id deleted successfully');
+          print('Doctor with id $uuId deleted successfully');
           state = AsyncData([]);
         },
       );

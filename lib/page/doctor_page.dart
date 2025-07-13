@@ -15,33 +15,18 @@ class DoctorPage extends ConsumerStatefulWidget {
 }
 
 class _DoctorPageState extends ConsumerState<DoctorPage> {
-  // deleteDoctor(int id) {
-  //   showAlertDialog(
-  //     context: context,
-  //     title: 'Hapus',
-  //     content: 'Apakah anda yakin ingin menghapus dokter ini?',
-  //     isConfirm: true,
-  //     onConfirm: () {
-  //       ref.read(doctorProvider.notifier).deleteDoctor(id).then((_) {
-  //         setState(() {
-  //           ref.read(doctorProvider.notifier).getDoctor();
-  //         });
-  //       });
-  //       Navigator.pop(context);
-  //     },
-  //   );
-  // }
-
-  deleteDoctor(int id) {
+  deleteDoctor(String uuId) {
     showAlertDialog(
       context: context,
       title: 'Hapus',
       content: 'Apakah anda yakin ingin menghapus dokter ini?',
       isConfirm: true,
       onConfirm: () {
-        ref.read(doctorSupabaseProvider.notifier).deleteDoctor(id).then((_) {
+        ref.read(doctorProvider.notifier).deleteDoctor(uuId).then((_) {
+          ref.read(doctorSupabaseProvider.notifier).deleteDoctor(uuId);
+          // Setelah menghapus, ambil ulang data dokter
           setState(() {
-            ref.read(doctorSupabaseProvider.notifier).getDoctor();
+            ref.read(doctorProvider.notifier).getDoctor();
           });
         });
         Navigator.pop(context);
@@ -49,9 +34,11 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
     );
   }
 
-  addDoctor(int id, String name, String specialty) {
-    ref.read(doctorSupabaseProvider.notifier).insertDoctor(name, specialty);
-    ref.read(doctorProvider.notifier).updateDoctorSync(id);
+  addDoctor(String uuId, String name, String specialty) {
+    ref
+        .read(doctorSupabaseProvider.notifier)
+        .insertDoctor(uuId, name, specialty);
+    ref.read(doctorProvider.notifier).updateDoctorSync(uuId);
     setState(() {
       ref.read(doctorProvider.notifier).getDoctor();
     });
@@ -59,13 +46,12 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
 
   @override
   void initState() {
-    ref.read(doctorSupabaseProvider.notifier).getDoctor();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final doctorState = ref.watch(doctorSupabaseProvider);
+    final doctorState = ref.watch(doctorProvider);
     return Scaffold(
       backgroundColor: AppColor.backgroundPrimaryColor,
       appBar: AppBar(
@@ -74,9 +60,9 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
       ),
       body: doctorState.when(
         data: (data) {
-          // if (data.isEmpty) {
-          //   return const Center(child: Text('Belum ada doctor'));
-          // }
+          if (data.isEmpty) {
+            return const Center(child: Text('Belum ada doctor'));
+          }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -116,13 +102,11 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                             maxLines: 1,
                                             style: TextStyle(fontSize: 18),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                doctor.specialty!,
-                                                style: TextStyle(fontSize: 16),
-                                              ),
-                                            ],
+                                          Text(
+                                            '${doctor.specialty!}${doctor.id}${doctor.uuId}',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(fontSize: 16),
                                           ),
                                         ],
                                       ),
@@ -136,7 +120,7 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                     ),
                                     IconButton(
                                       onPressed: () {
-                                        deleteDoctor(doctor.id!);
+                                        deleteDoctor(doctor.uuId!);
                                       },
                                       icon: Icon(
                                         Icons.delete,
@@ -145,32 +129,32 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                     ),
                                   ],
                                 ),
-                                // doctor.synced == true
-                                //     ? Container()
-                                //     : ElevatedButton(
-                                //       onPressed: () {
-                                //         addDoctor(
-                                //           doctor.id!,
-                                //           doctor.name,
-                                //           doctor.specialty!,
-                                //         );
-                                //       },
-                                //       style: ElevatedButton.styleFrom(
-                                //         backgroundColor: AppColor.primaryColor,
-                                //         shape: RoundedRectangleBorder(
-                                //           borderRadius: BorderRadius.circular(
-                                //             15,
-                                //           ),
-                                //         ),
-                                //         padding: const EdgeInsets.all(10),
-                                //       ),
-                                //       child: Text(
-                                //         'Synchronize',
-                                //         style: TextStyle(
-                                //           color: AppColor.secondaryTextColor,
-                                //         ),
-                                //       ),
-                                //     ),
+                                doctor.synced == true
+                                    ? Container()
+                                    : ElevatedButton(
+                                      onPressed: () {
+                                        addDoctor(
+                                          doctor.uuId!,
+                                          doctor.name,
+                                          doctor.specialty!,
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColor.primaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                        ),
+                                        padding: const EdgeInsets.all(10),
+                                      ),
+                                      child: Text(
+                                        'Synchronize',
+                                        style: TextStyle(
+                                          color: AppColor.secondaryTextColor,
+                                        ),
+                                      ),
+                                    ),
                               ],
                             ),
                           ),

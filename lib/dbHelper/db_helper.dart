@@ -43,6 +43,7 @@ class DatabaseHelper {
     const doctorTable = '''
   CREATE TABLE doctors (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uuId TEXT NOT NULL,
     name TEXT NOT NULL,
     specialty TEXT NOT NULL,
     synced INTEGER DEFAULT 0
@@ -52,6 +53,7 @@ class DatabaseHelper {
     const medicineTable = '''
   CREATE TABLE medicines (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uuId TEXT NOT NULL,
     name TEXT,
     dosage TEXT,
     quantity INTEGER,
@@ -65,6 +67,7 @@ class DatabaseHelper {
     const controlTable = '''
   CREATE TABLE controls (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uuId TEXT NOT NULL,
     userId INTEGER NOT NULL,
     doctorName TEXT,
     date TEXT,
@@ -145,15 +148,15 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> insertDoctor(DoctorModel doctor) async {
+  Future<bool> insertDoctor(DoctorModel doctor) async {
     try {
       final db = await database;
       await db.insert('doctors', doctor.toJson());
       print('Inserting doctor: ${doctor.toJson()}');
-      return 1;
+      return true;
     } catch (e) {
       print('Error inserting doctor: $e');
-      return 0;
+      return false;
     }
   }
 
@@ -197,8 +200,8 @@ class DatabaseHelper {
       final result = await db.update(
         'doctors',
         doctor.toJson(),
-        where: 'id = ?',
-        whereArgs: [doctor.id],
+        where: 'uuId = ?',
+        whereArgs: [doctor.uuId],
       );
       print('Updating doctor: ${doctor.toJson()}');
       return result;
@@ -208,16 +211,16 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> updateDoctorSync(int id) async {
+  Future<int> updateDoctorSync(String uuId) async {
     try {
       final db = await database;
       final result = await db.update(
         'doctors',
         {'synced': 1},
-        where: 'id = ?',
-        whereArgs: [id],
+        where: 'uuId = ?',
+        whereArgs: [uuId],
       );
-      print('Updating doctor sync status for id: $id');
+      print('Updating doctor sync status for id: $uuId');
       print('Result: $result');
       return 1;
     } catch (e) {
@@ -226,15 +229,15 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> deleteDoctor(int id) async {
+  Future<int> deleteDoctor(String uuId) async {
     try {
       final db = await database;
       final result = await db.delete(
         'doctors',
-        where: 'id = ?',
-        whereArgs: [id],
+        where: 'uuId = ?',
+        whereArgs: [uuId],
       );
-      print('Deleting doctor with id: $id');
+      print('Deleting doctor with uuId: $uuId');
       return 1;
     } catch (e) {
       print('Error deleting doctor: $e');
