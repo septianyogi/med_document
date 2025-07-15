@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../datasource/supabase/doctor_supabase.dart';
 import '../../model/doctor_model.dart';
 
-class DocotorSupabaseNotifier
+class DoctorSupabaseNotifier
     extends StateNotifier<AsyncValue<List<DoctorModel>>> {
-  DocotorSupabaseNotifier() : super(const AsyncLoading());
+  DoctorSupabaseNotifier() : super(const AsyncLoading());
 
   final DoctorSupabase _doctorSupabase = DoctorSupabase();
 
@@ -79,6 +79,6 @@ class DocotorSupabaseNotifier
 }
 
 final doctorSupabaseProvider = StateNotifierProvider<
-  DocotorSupabaseNotifier,
+  DoctorSupabaseNotifier,
   AsyncValue<List<DoctorModel>>
->((ref) => DocotorSupabaseNotifier()..getDoctor());
+>((ref) => DoctorSupabaseNotifier()..getDoctor());

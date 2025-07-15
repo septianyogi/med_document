@@ -5,6 +5,7 @@ import 'package:med_document/config/app_color.dart';
 import 'package:med_document/page/add_control_page.dart';
 import 'package:med_document/page/detail_control.dart';
 import 'package:med_document/provider/control_provider.dart';
+import 'package:med_document/provider/supabase/control_supabase_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -14,6 +15,31 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  insertControlToSupabase(
+    String uuId,
+    String doctorName,
+    String date,
+    String time,
+    String description,
+    int rujuk,
+    String appointment,
+  ) {
+    ref
+        .read(controlSupabaseProvider.notifier)
+        .insertControl(
+          uuId,
+          doctorName,
+          date,
+          time,
+          description,
+          rujuk == 1,
+          appointment,
+        )
+        .then((_) {
+          ref.read(controlProvider.notifier).updateControlSync(uuId);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final controlState = ref.watch(controlProvider);
@@ -30,12 +56,19 @@ class _HomePageState extends ConsumerState<HomePage> {
             if (data.isEmpty) {
               return const Center(child: Text('Belum ada Data'));
             }
+            List sortedData = List.from(data)..sort((a, b) {
+              final dateA = a.date is String ? DateTime.parse(a.date!) : a.date;
+              final dateB = b.date is String ? DateTime.parse(b.date!) : b.date;
+              return dateB.compareTo(dateA);
+            });
+
             return Column(
               children: [
                 Expanded(
                   child: ListView.builder(
+                    itemCount: sortedData.length,
                     itemBuilder: (context, index) {
-                      final control = data[index];
+                      final control = sortedData[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -59,26 +92,62 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 vertical: 10,
                                 horizontal: 15,
                               ),
-                              child: Row(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'dr. ${control.doctorName!}',
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(fontSize: 17),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'dr. ${control.doctorName!}',
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(fontSize: 17),
+                                            ),
+                                            Text(
+                                              '${DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.parse(control.date!))} (${control.time})',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          '${DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.parse(control.date!))} (${control.time})',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
+                                  control.synced == true
+                                      ? Container()
+                                      : ElevatedButton(
+                                        onPressed: () {
+                                          insertControlToSupabase(
+                                            control.uuId,
+                                            control.doctorName!,
+                                            control.date!,
+                                            control.time!,
+                                            control.description!,
+                                            control.rujuk,
+                                            control.appointment!,
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColor.primaryColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.all(10),
+                                        ),
+                                        child: Text(
+                                          'Synchronize',
+                                          style: TextStyle(
+                                            color: AppColor.secondaryTextColor,
+                                          ),
+                                        ),
+                                      ),
                                 ],
                               ),
                             ),
@@ -86,7 +155,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       );
                     },
-                    itemCount: data.length,
                   ),
                 ),
               ],

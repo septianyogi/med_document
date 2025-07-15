@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:med_document/datasource/supabase/control_supabase.dart';
 import 'package:med_document/dbHelper/db_helper.dart';
 import 'package:med_document/model/control_model.dart';
+import 'package:uuid/uuid.dart';
 
 class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
   ControlNotifier() : super(const AsyncValue.loading());
 
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
+  final ControlSupabase _controlSupabase = ControlSupabase();
 
   Future<void> getControl() async {
     try {
@@ -32,31 +35,82 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
   ) async {
     try {
       if (!mounted) return;
-      final control = ControlModel(
-        userId: userId,
-        doctorName: doctorName ?? '',
-        date: date ?? '',
-        time: time ?? '',
-        description: description ?? '',
-        appointment: appointment ?? '',
-        rujuk: rujuk ?? 0,
+
+      String uuId = Uuid().v4();
+      final supabase = await _controlSupabase.insertControl(
+        uuId,
+        doctorName ?? '',
+        date ?? '',
+        time ?? '',
+        description ?? '',
+        rujuk == 1,
+        appointment ?? '',
       );
-      final result = await _databaseHelper.insertControl(control);
-      if (result == 1) {
-        final controls = await _databaseHelper.getControls();
-        state = AsyncValue.data(controls);
-      } else {
-        state = AsyncValue.error(
-          'Failed to insert control',
-          StackTrace.current,
-        );
-      }
+
+      supabase.fold(
+        (failure) async {
+          print('Failed to add control to Supabase');
+          final result = await _databaseHelper.insertControl(
+            ControlModel(
+              uuId: uuId,
+              userId: userId,
+              doctorName: doctorName ?? '',
+              date: date ?? '',
+              time: time ?? '',
+              description: description ?? '',
+              appointment: appointment ?? '',
+              rujuk: rujuk,
+              synced: false,
+            ),
+          );
+          if (result == 1) {
+            print('Control added successfully to local database');
+            final controls = await _databaseHelper.getControls();
+            state = AsyncValue.data(controls);
+          } else {
+            print('Failed to insert control to local database');
+            state = AsyncValue.error(
+              'Failed to insert control',
+              StackTrace.current,
+            );
+          }
+        },
+        (result) async {
+          if (result == true) {
+            final result = await _databaseHelper.insertControl(
+              ControlModel(
+                uuId: uuId,
+                userId: userId,
+                doctorName: doctorName ?? '',
+                date: date ?? '',
+                time: time ?? '',
+                description: description ?? '',
+                appointment: appointment ?? '',
+                rujuk: rujuk ?? 0,
+                synced: true,
+              ),
+            );
+            if (result == 1) {
+              print('Control added successfully to local database');
+              final controls = await _databaseHelper.getControls();
+              state = AsyncValue.data(controls);
+            } else {
+              print('Failed to insert control to local database');
+              state = AsyncValue.error(
+                'Failed to insert control',
+                StackTrace.current,
+              );
+            }
+          }
+        },
+      );
     } catch (e) {
       state = AsyncValue.error(e.toString(), StackTrace.current);
     }
   }
 
   Future<void> updateControl(
+    String uuId,
     int userId,
     String? doctorName,
     String? date,
@@ -64,10 +118,12 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
     String? description,
     String? appointment,
     int rujuk,
+    bool synced,
   ) async {
     try {
       if (!mounted) return;
       final control = ControlModel(
+        uuId: uuId,
         userId: userId,
         doctorName: doctorName,
         date: date,
@@ -75,6 +131,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
         description: description,
         appointment: appointment,
         rujuk: rujuk,
+        synced: synced,
       );
       final result = await _databaseHelper.updateControl(control);
       if (result == 1) {
@@ -83,6 +140,24 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
       } else {
         state = AsyncValue.error(
           'Failed to update control',
+          StackTrace.current,
+        );
+      }
+    } catch (e) {
+      state = AsyncValue.error(e.toString(), StackTrace.current);
+    }
+  }
+
+  Future<void> updateControlSync(String uuId) async {
+    try {
+      if (!mounted) return;
+      final result = await _databaseHelper.updateControlSynced(uuId);
+      if (result == 1) {
+        final controls = await _databaseHelper.getControls();
+        state = AsyncValue.data(controls);
+      } else {
+        state = AsyncValue.error(
+          'Failed to update control sync status',
           StackTrace.current,
         );
       }

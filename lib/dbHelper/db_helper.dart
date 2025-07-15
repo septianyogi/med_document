@@ -368,6 +368,23 @@ class DatabaseHelper {
     }
   }
 
+  Future<int> updateControlSynced(String uuId) async {
+    try {
+      final db = await database;
+      final result = await db.update(
+        'controls',
+        {'synced': 1},
+        where: 'uuId = ?',
+        whereArgs: [uuId],
+      );
+      print('Updating control sync status for uuId: $uuId');
+      return 1;
+    } catch (e) {
+      print('Error updating control sync status: $e');
+      return 0;
+    }
+  }
+
   Future<int> deleteControl(int id) async {
     try {
       final db = await database;

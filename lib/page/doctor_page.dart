@@ -34,7 +34,7 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
     );
   }
 
-  addDoctor(String uuId, String name, String specialty) {
+  insertDoctorToSupabase(String uuId, String name, String specialty) {
     ref
         .read(doctorSupabaseProvider.notifier)
         .insertDoctor(uuId, name, specialty);
@@ -61,7 +61,7 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
       body: doctorState.when(
         data: (data) {
           if (data.isEmpty) {
-            return const Center(child: Text('Belum ada doctor'));
+            return const Center(child: Text('Doctor is empty'));
           }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -133,7 +133,7 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
                                     ? Container()
                                     : ElevatedButton(
                                       onPressed: () {
-                                        addDoctor(
+                                        insertDoctorToSupabase(
                                           doctor.uuId!,
                                           doctor.name,
                                           doctor.specialty!,

@@ -20,7 +20,7 @@ class DoctorSupabase {
         'specialty': specialty,
       });
 
-      print('Doctor added successfully');
+      print('Doctor added to supabase successfully');
       return Right(true);
     } catch (e) {
       print('Error adding doctor: $e');

@@ -2,7 +2,7 @@ import 'package:med_document/model/medicine_model.dart';
 
 class ControlModel {
   int? id;
-  String? uuId;
+  String uuId;
   int userId;
   String? doctorName;
   String? date;
@@ -10,11 +10,12 @@ class ControlModel {
   String? description;
   String? appointment;
   int rujuk;
+  bool synced;
   // List<MedicineModel> medicine;
 
   ControlModel({
     this.id,
-    this.uuId,
+    required this.uuId,
     required this.userId,
     this.doctorName,
     this.date,
@@ -22,6 +23,7 @@ class ControlModel {
     this.description,
     this.appointment,
     this.rujuk = 0,
+    required this.synced,
     // this.medicine = const [],
   });
 
@@ -36,13 +38,7 @@ class ControlModel {
       description: map['description'],
       appointment: map['appointment'],
       rujuk: map['rujuk'] ?? 0,
-      // medicine:
-      //     (map['medicine'] as List<dynamic>?)
-      //         ?.map(
-      //           (item) => MedicineModel.fromJson(item as Map<String, dynamic>),
-      //         )
-      //         .toList() ??
-      //     [],
+      synced: map['synced'] == 1,
     );
   }
 
@@ -57,7 +53,7 @@ class ControlModel {
       'description': description,
       'appointment': appointment,
       'rujuk': rujuk,
-      // 'medicine': medicine.map((m) => m.toJson()).toList(),
+      'synced': synced ? 1 : 0,
     };
   }
 }
