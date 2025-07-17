@@ -103,7 +103,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              'dr. ${control.doctorName!}',
+                                              '${control.doctorName!}',
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: TextStyle(fontSize: 17),

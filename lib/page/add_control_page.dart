@@ -91,42 +91,40 @@ class _AddControlPageState extends ConsumerState<AddControlPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: AppColor.primaryColor,
-                              width: 2,
-                            ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: AppColor.primaryColor,
+                            width: 2,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 10,
-                            ),
-                            child: Text(
-                              setDate,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade700,
-                              ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 15,
+                            horizontal: 10,
+                          ),
+                          child: Text(
+                            setDate,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade700,
                             ),
                           ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          getDate(context);
-                        },
-                        icon: Icon(Icons.date_range),
-                      ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        getDate(context);
+                      },
+                      icon: Icon(Icons.date_range),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
                 TextFormField(

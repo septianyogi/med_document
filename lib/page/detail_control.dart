@@ -21,7 +21,7 @@ class _DetailControlPageState extends ConsumerState<DetailControlPage> {
     Future.microtask(() {
       ref
           .read(medicineProvider.notifier)
-          .getMedicineByControlId(widget.control.id!);
+          .getMedicineByControlId(widget.control.uuId!);
     });
     super.initState();
   }
@@ -60,7 +60,7 @@ class _DetailControlPageState extends ConsumerState<DetailControlPage> {
                       Icon(Icons.person, size: 50, color: Colors.white),
                       SizedBox(height: 20),
                       Text(
-                        'dr. ${widget.control.doctorName}',
+                        '${widget.control.doctorName}',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: const TextStyle(
@@ -266,7 +266,7 @@ class _DetailControlPageState extends ConsumerState<DetailControlPage> {
                                         MaterialPageRoute(
                                           builder:
                                               (context) => AddMedicinePage(
-                                                controlId: widget.control.id!,
+                                                controlId: widget.control.uuId,
                                               ),
                                         ),
                                       );

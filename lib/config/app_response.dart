@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:d_method/d_method.dart';
 import 'package:http/http.dart';
 import 'package:med_document/config/failure.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AppResponse {
   static Map data(Response response) {

@@ -7,7 +7,7 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
 
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
-  Future<void> getMedicineByControlId(int controlId) async {
+  Future<void> getMedicineByControlId(String controlId) async {
     try {
       if (!mounted) return;
       final medicines = await _databaseHelper.getMedicineByControlId(controlId);
@@ -25,7 +25,8 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
     String name,
     String dosage,
     String frequency,
-    int controlId,
+    int quantity,
+    String controlId,
   ) async {
     try {
       if (!mounted) return;
@@ -33,6 +34,7 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
         name: name,
         dosage: dosage,
         frequency: frequency,
+        quantity: quantity,
         controlId: controlId,
       );
       final result = await _databaseHelper.insertMedicine(medicine);
@@ -56,6 +58,7 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
     int id,
     String name,
     String dosage,
+    int quantity,
     String frequency,
   ) async {
     try {
@@ -64,6 +67,7 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
         id: id,
         name: name,
         dosage: dosage,
+        quantity: quantity,
         frequency: frequency,
       );
       final result = await _databaseHelper.updateMedicine(medicine);
@@ -81,10 +85,10 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
     }
   }
 
-  Future<void> deleteMedicine(int id) async {
+  Future<void> deleteMedicine(String uuId) async {
     try {
       if (!mounted) return;
-      final result = await _databaseHelper.deleteMedicine(id);
+      final result = await _databaseHelper.deleteMedicine(uuId);
       if (result == 1) {
         final medicines = await _databaseHelper.getMedicines();
         state = AsyncValue.data(medicines);

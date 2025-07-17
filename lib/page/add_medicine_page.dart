@@ -6,7 +6,7 @@ import '../config/app_color.dart';
 
 class AddMedicinePage extends ConsumerStatefulWidget {
   const AddMedicinePage({super.key, required this.controlId});
-  final int? controlId;
+  final String? controlId;
 
   @override
   ConsumerState<AddMedicinePage> createState() => _AddMedicinePageState();
@@ -17,15 +17,17 @@ class _AddMedicinePageState extends ConsumerState<AddMedicinePage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dosageController = TextEditingController();
   final TextEditingController frequencyController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
 
   Future<void> addMedicine() async {
     final name = nameController.text;
     final dosage = dosageController.text;
     final frequency = frequencyController.text;
+    final quantity = int.tryParse(quantityController.text) ?? 0;
     final controlId = widget.controlId;
     await ref
         .read(medicineProvider.notifier)
-        .insertMedicine(name, dosage, frequency, controlId!);
+        .insertMedicine(name, dosage, frequency, quantity, controlId!);
 
     Navigator.pop(context, true);
   }
@@ -78,10 +80,42 @@ class _AddMedicinePageState extends ConsumerState<AddMedicinePage> {
                   },
                 ),
                 const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: frequencyController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Frekuensi Obat',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Spesialis tidak boleh kosong';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Text(
+                      ' x/Hari',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppColor.primaryTextColor,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
-                  controller: frequencyController,
+                  controller: quantityController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: 'Frekuensi Obat',
+                    labelText: 'Quantity Obat',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),

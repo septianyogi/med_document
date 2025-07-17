@@ -4,7 +4,8 @@ class MedicineModel {
   String? name;
   String? dosage;
   String? frequency;
-  int? controlId;
+  int? quantity;
+  String? controlId;
 
   MedicineModel({
     this.id,
@@ -12,6 +13,7 @@ class MedicineModel {
     this.name,
     this.dosage,
     this.frequency,
+    this.quantity,
     this.controlId,
   });
 
@@ -22,6 +24,7 @@ class MedicineModel {
       name: map['name'],
       dosage: map['dosage'],
       frequency: map['frequency'],
+      quantity: map['quantity'],
       controlId: map['controlId'],
     );
   }
@@ -33,6 +36,7 @@ class MedicineModel {
       'name': name,
       'dosage': dosage,
       'frequency': frequency,
+      'quantity': quantity,
       'controlId': controlId,
     };
   }

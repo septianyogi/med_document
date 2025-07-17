@@ -272,7 +272,7 @@ class DatabaseHelper {
     }
   }
 
-  Future<List<MedicineModel>> getMedicineByControlId(int controlId) async {
+  Future<List<MedicineModel>> getMedicineByControlId(String controlId) async {
     try {
       final db = await database;
       final medicines = await db.query(
@@ -297,8 +297,8 @@ class DatabaseHelper {
       final result = await db.update(
         'medicines',
         medicine.toJson(),
-        where: 'id = ?',
-        whereArgs: [medicine.id],
+        where: 'uuId = ?',
+        whereArgs: [medicine.uuId],
       );
       print('Updating medicine: ${medicine.toJson()}');
       return result;
@@ -308,15 +308,15 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> deleteMedicine(int id) async {
+  Future<int> deleteMedicine(String uuId) async {
     try {
       final db = await database;
       final result = await db.delete(
         'medicines',
-        where: 'id = ?',
-        whereArgs: [id],
+        where: 'uuId = ?',
+        whereArgs: [uuId],
       );
-      print('Deleting medicine with id: $id');
+      print('Deleting medicine with id: $uuId');
       return result;
     } catch (e) {
       print('Error deleting medicine: $e');
