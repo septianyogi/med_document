@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:med_document/page/dashboard/dashboard.dart';
+import 'package:med_document/page/login_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {

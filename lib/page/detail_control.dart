@@ -302,20 +302,49 @@ class _DetailControlPageState extends ConsumerState<DetailControlPage> {
                                     itemBuilder: (context, index) {
                                       final medicine = data[index];
                                       return ListTile(
-                                        title: Text(
-                                          medicine.name!,
-                                          style: const TextStyle(
-                                            fontSize: 17,
-                                            color: AppColor.primaryTextColor,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                        title: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              medicine.name!,
+                                              style: const TextStyle(
+                                                fontSize: 17,
+                                                color:
+                                                    AppColor.primaryTextColor,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Q: ${medicine.quantity}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                color:
+                                                    AppColor.primaryTextColor,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        subtitle: Text(
-                                          'Dosis: ${medicine.dosage}, Frekuensi: ${medicine.frequency} x 1',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: AppColor.primaryTextColor,
-                                          ),
+                                        subtitle: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Dosis: ${medicine.dosage}, Frekuensi: ${medicine.frequency} x 1',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                color:
+                                                    AppColor.primaryTextColor,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${medicine.uuId}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                color:
+                                                    AppColor.primaryTextColor,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       );
                                     },

@@ -5,16 +5,20 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class MedicineSupabase {
   final supabase = Supabase.instance.client;
   Future<Either<Failure, bool>> insertMedicine(
+    String uuId,
     String name,
     String dosage,
     String frequency,
+    String controlId,
     int quantity,
   ) async {
     try {
       await supabase.from('medicines').insert({
+        'uuId': uuId,
         'name': name,
         'dosage': dosage,
         'frequency': frequency,
+        'control_id': controlId,
         'quantity': quantity,
       });
       print('Medicine added to supabase successfully');

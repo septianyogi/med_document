@@ -63,7 +63,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
               synced: false,
             ),
           );
-          if (result == 1) {
+          if (result == true) {
             print('Control added successfully to local database');
             final controls = await _databaseHelper.getControls();
             state = AsyncValue.data(controls);
@@ -90,7 +90,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
                 synced: true,
               ),
             );
-            if (result == 1) {
+            if (result == true) {
               print('Control added successfully to local database');
               final controls = await _databaseHelper.getControls();
               state = AsyncValue.data(controls);
@@ -134,7 +134,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
         synced: synced,
       );
       final result = await _databaseHelper.updateControl(control);
-      if (result == 1) {
+      if (result == true) {
         final controls = await _databaseHelper.getControls();
         state = AsyncValue.data(controls);
       } else {
@@ -152,7 +152,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
     try {
       if (!mounted) return;
       final result = await _databaseHelper.updateControlSynced(uuId);
-      if (result == 1) {
+      if (result == true) {
         final controls = await _databaseHelper.getControls();
         state = AsyncValue.data(controls);
       } else {
@@ -170,7 +170,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
     try {
       if (!mounted) return;
       final result = await _databaseHelper.deleteControl(id);
-      if (result == 1) {
+      if (result == true) {
         final controls = await _databaseHelper.getControls();
         state = AsyncValue.data(controls);
       } else {

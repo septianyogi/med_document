@@ -1,11 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_document/dbHelper/db_helper.dart';
 import 'package:med_document/model/medicine_model.dart';
+import 'package:uuid/uuid.dart';
+
+import '../datasource/supabase/medicine_supabase.dart';
 
 class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
   MedicineNotifier() : super(const AsyncValue.loading());
 
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
+  final MedicineSupabase _medicineSupabase = MedicineSupabase();
 
   Future<void> getMedicineByControlId(String controlId) async {
     try {
@@ -30,25 +34,74 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
   ) async {
     try {
       if (!mounted) return;
-      final medicine = MedicineModel(
-        name: name,
-        dosage: dosage,
-        frequency: frequency,
-        quantity: quantity,
-        controlId: controlId,
+      String uuId = Uuid().v4();
+      final supabase = await _medicineSupabase.insertMedicine(
+        uuId,
+        name,
+        dosage,
+        frequency,
+        controlId,
+        quantity,
       );
-      final result = await _databaseHelper.insertMedicine(medicine);
-      if (result == 1) {
-        final medicines = await _databaseHelper.getMedicineByControlId(
-          controlId,
-        );
-        state = AsyncValue.data(medicines);
-      } else {
-        state = AsyncValue.error(
-          'Failed to insert medicine',
-          StackTrace.current,
-        );
-      }
+
+      supabase.fold(
+        (failure) async {
+          print('Failed to add medicine to Supabase');
+          final result = await _databaseHelper.insertMedicine(
+            MedicineModel(
+              uuId: uuId,
+              name: name,
+              dosage: dosage,
+              frequency: frequency,
+              quantity: quantity,
+              controlId: controlId,
+              synced: false,
+            ),
+          );
+          if (result == true) {
+            print('Medicine added successfully to local database');
+            final medicines = await _databaseHelper.getMedicineByControlId(
+              controlId,
+            );
+            state = AsyncValue.data(medicines);
+          } else {
+            print('Failed to insert medicine to local database');
+            state = AsyncValue.error(
+              'Failed to insert medicine',
+              StackTrace.current,
+            );
+          }
+        },
+        (result) async {
+          if (result == true) {
+            print('Medicine added successfully to Supabase');
+            final result = await _databaseHelper.insertMedicine(
+              MedicineModel(
+                uuId: uuId,
+                name: name,
+                dosage: dosage,
+                frequency: frequency,
+                quantity: quantity,
+                controlId: controlId,
+                synced: true,
+              ),
+            );
+            if (result == true) {
+              print('Medicine added successfully to local database');
+              final medicines = await _databaseHelper.getMedicineByControlId(
+                controlId,
+              );
+              state = AsyncValue.data(medicines);
+            } else {
+              print('Failed to insert medicine to local database');
+              state = AsyncValue.error(
+                'Failed to insert medicine',
+                StackTrace.current,
+              );
+            }
+          }
+        },
+      );
     } catch (e) {
       state = AsyncValue.error(e.toString(), StackTrace.current);
     }
@@ -60,6 +113,7 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
     String dosage,
     int quantity,
     String frequency,
+    bool synced,
   ) async {
     try {
       if (!mounted) return;
@@ -69,9 +123,10 @@ class MedicineNotifier extends StateNotifier<AsyncValue<List<MedicineModel>>> {
         dosage: dosage,
         quantity: quantity,
         frequency: frequency,
+        synced: synced,
       );
       final result = await _databaseHelper.updateMedicine(medicine);
-      if (result > 0) {
+      if (result == true) {
         final medicines = await _databaseHelper.getMedicines();
         state = AsyncValue.data(medicines);
       } else {

@@ -6,6 +6,7 @@ class MedicineModel {
   String? frequency;
   int? quantity;
   String? controlId;
+  bool synced;
 
   MedicineModel({
     this.id,
@@ -15,6 +16,7 @@ class MedicineModel {
     this.frequency,
     this.quantity,
     this.controlId,
+    required this.synced,
   });
 
   factory MedicineModel.fromJson(Map<String, dynamic> map) {
@@ -26,6 +28,7 @@ class MedicineModel {
       frequency: map['frequency'],
       quantity: map['quantity'],
       controlId: map['controlId'],
+      synced: map['synced'] == 1,
     );
   }
 
@@ -38,6 +41,7 @@ class MedicineModel {
       'frequency': frequency,
       'quantity': quantity,
       'controlId': controlId,
+      'synced': synced ? 1 : 0,
     };
   }
 }

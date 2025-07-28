@@ -245,15 +245,15 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> insertMedicine(MedicineModel medicine) async {
+  Future<bool> insertMedicine(MedicineModel medicine) async {
     try {
       final db = await database;
       await db.insert('medicines', medicine.toJson());
       print('Inserting medicine: ${medicine.toJson()}');
-      return 1;
+      return true;
     } catch (e) {
       print('Error inserting medicine: $e');
-      return 0;
+      return false;
     }
   }
 
@@ -291,7 +291,7 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> updateMedicine(MedicineModel medicine) async {
+  Future<bool> updateMedicine(MedicineModel medicine) async {
     try {
       final db = await database;
       final result = await db.update(
@@ -301,14 +301,14 @@ class DatabaseHelper {
         whereArgs: [medicine.uuId],
       );
       print('Updating medicine: ${medicine.toJson()}');
-      return result;
+      return true;
     } catch (e) {
       print('Error updating medicine: $e');
-      return 0;
+      return false;
     }
   }
 
-  Future<int> deleteMedicine(String uuId) async {
+  Future<bool> deleteMedicine(String uuId) async {
     try {
       final db = await database;
       final result = await db.delete(
@@ -317,22 +317,22 @@ class DatabaseHelper {
         whereArgs: [uuId],
       );
       print('Deleting medicine with id: $uuId');
-      return result;
+      return true;
     } catch (e) {
       print('Error deleting medicine: $e');
-      return 0;
+      return false;
     }
   }
 
-  Future<int> insertControl(ControlModel control) async {
+  Future<bool> insertControl(ControlModel control) async {
     try {
       final db = await database;
       await db.insert('controls', control.toJson());
       print('Inserting control: ${control.toJson()}');
-      return 1;
+      return true;
     } catch (e) {
       print('Error inserting control: $e');
-      return 0;
+      return false;
     }
   }
 
@@ -351,7 +351,7 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> updateControl(ControlModel control) async {
+  Future<bool> updateControl(ControlModel control) async {
     try {
       final db = await database;
       final result = await db.update(
@@ -361,14 +361,14 @@ class DatabaseHelper {
         whereArgs: [control.id],
       );
       print('Updating control: ${control.toJson()}');
-      return 1;
+      return true;
     } catch (e) {
       print('Error updating control: $e');
-      return 0;
+      return false;
     }
   }
 
-  Future<int> updateControlSynced(String uuId) async {
+  Future<bool> updateControlSynced(String uuId) async {
     try {
       final db = await database;
       final result = await db.update(
@@ -378,14 +378,14 @@ class DatabaseHelper {
         whereArgs: [uuId],
       );
       print('Updating control sync status for uuId: $uuId');
-      return 1;
+      return true;
     } catch (e) {
       print('Error updating control sync status: $e');
-      return 0;
+      return false;
     }
   }
 
-  Future<int> deleteControl(int id) async {
+  Future<bool> deleteControl(int id) async {
     try {
       final db = await database;
       final result = await db.delete(
@@ -394,10 +394,10 @@ class DatabaseHelper {
         whereArgs: [id],
       );
       print('Deleting control with id: $id');
-      return 1;
+      return true;
     } catch (e) {
       print('Error deleting control: $e');
-      return 0;
+      return false;
     }
   }
 }

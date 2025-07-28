@@ -80,9 +80,9 @@ class DoctorNotifier extends StateNotifier<AsyncValue<List<DoctorModel>>> {
           }
         },
       );
-      if (supabase == true) {
-      } else {}
-    } catch (e) {}
+    } catch (e) {
+      state = AsyncValue.error(e.toString(), StackTrace.current);
+    }
   }
 
   Future<void> updateDoctor(
