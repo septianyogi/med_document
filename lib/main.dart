@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       ],
       locale: const Locale('id'), // Set default ke Indonesia
 
-      home: const DashboardPage(),
+      home: const LoginPage(),
     );
   }
 }

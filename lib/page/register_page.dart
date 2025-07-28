@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:med_document/config/app_color.dart';
 import 'package:med_document/page/dashboard/dashboard.dart';
-import 'package:med_document/page/register_page.dart';
+import 'package:med_document/page/login_page.dart';
 import 'package:med_document/provider/supabase/auth_supabase_provider.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+import '../config/app_color.dart';
+
+class RegisterPage extends ConsumerStatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool obscureText = true;
 
-  signIn() async {
+  signUp() async {
     if (_formKey.currentState!.validate()) {
+      String username = usernameController.text;
       String email = emailController.text;
       String password = passwordController.text;
 
-      // Simulate a sign-in process
       final response = await ref
           .read(authSupabaseProvider.notifier)
-          .signIn(email, password);
+          .signUp(username, email, password);
 
       if (response && mounted) {
         Navigator.pushReplacement(
@@ -35,7 +37,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Sign in failed. Please try again.')),
+          SnackBar(content: Text('Sign up failed. Please try again.')),
         );
       }
     }
@@ -54,7 +56,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Sign In',
+                  'Sign Up',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w700,
@@ -62,7 +64,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
                 Text(
-                  'Please sign in to continue',
+                  'Please fill in the form to register',
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w500,
@@ -71,11 +73,41 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 SizedBox(height: 25),
                 TextFormField(
-                  controller: emailController,
+                  controller: usernameController,
                   decoration: InputDecoration(
+                    labelText: 'Username',
                     filled: true,
                     fillColor: AppColor.whiteColor,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColor.primaryColor),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColor.tertiaryColor),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColor.tertiaryColor),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your username';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 15),
+                TextFormField(
+                  controller: emailController,
+                  decoration: InputDecoration(
                     labelText: 'Email',
+                    filled: true,
+                    fillColor: AppColor.whiteColor,
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: AppColor.primaryColor),
                       borderRadius: BorderRadius.circular(10),
@@ -107,15 +139,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     filled: true,
                     fillColor: AppColor.whiteColor,
                     suffixIcon: IconButton(
-                      icon: Icon(
-                        obscureText ? Icons.visibility : Icons.visibility_off,
-                        color: AppColor.primaryColor,
-                      ),
                       onPressed: () {
                         setState(() {
                           obscureText = !obscureText;
                         });
                       },
+                      icon:
+                          obscureText
+                              ? Icon(
+                                Icons.visibility_off,
+                                color: AppColor.primaryColor,
+                              )
+                              : Icon(
+                                Icons.visibility,
+                                color: AppColor.primaryColor,
+                              ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: AppColor.primaryColor),
@@ -147,7 +185,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          signIn();
+                          signUp();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColor.primaryColor,
@@ -157,7 +195,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: Text(
-                          'Sign In',
+                          'Sign Up',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -172,84 +210,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Haven\'t registered yet?'),
+                    Text('Already have an account?'),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterPage(),
-                          ),
+                          MaterialPageRoute(builder: (context) => LoginPage()),
                         );
                       },
                       child: Text(
-                        ' Sign Up',
+                        ' Sign In',
                         style: TextStyle(
                           color: AppColor.primaryColor,
                           fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 2,
-                        color: AppColor.tertiaryTextColor,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'Or',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: AppColor.primaryTextColor,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 2,
-                        color: AppColor.tertiaryTextColor,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColor.whiteColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/google_logo.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            Text(
-                              'Sign in with Google',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: AppColor.primaryTextColor,
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     ),

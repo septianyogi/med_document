@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_document/config/app_color.dart';
 import 'package:med_document/page/doctor_page.dart';
+import 'package:med_document/page/login_page.dart';
+import 'package:med_document/provider/supabase/auth_supabase_provider.dart';
 import 'package:med_document/provider/user_provider.dart';
 import 'package:med_document/widget/button_widget.dart';
 
@@ -15,6 +17,20 @@ class SettingPage extends ConsumerStatefulWidget {
 }
 
 class _SettingPageState extends ConsumerState<SettingPage> {
+  signOut() async {
+    final response = await ref.read(authSupabaseProvider.notifier).signOut();
+    if (response) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign out failed. Please try again.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
@@ -149,6 +165,33 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                     ),
                     child: Text(
                       'Doctor',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.secondaryTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 40),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      signOut();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding: const EdgeInsets.all(14),
+                    ),
+                    child: Text(
+                      'Sign Out',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w500,
