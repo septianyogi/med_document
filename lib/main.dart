@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import 'package:med_document/page/dashboard/dashboard.dart';
 import 'package:med_document/page/login_page.dart';
+import 'package:med_document/splash_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
       ],
       locale: const Locale('id'), // Set default ke Indonesia
 
-      home: const LoginPage(),
+      home: const SplashScreen(),
     );
   }
 }

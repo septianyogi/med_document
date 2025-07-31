@@ -5,6 +5,7 @@ import '../../config/failure.dart';
 
 class AuthSupabase {
   final supabase = Supabase.instance.client;
+  
   Future<Either<Failure, AuthResponse>> signUp(
     String username,
     String email,
