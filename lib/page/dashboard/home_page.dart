@@ -18,6 +18,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   insertControlToSupabase(
     String uuId,
     String doctorName,
+    String title,
     String date,
     String time,
     String description,
@@ -29,6 +30,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         .insertControl(
           uuId,
           doctorName,
+          title,
           date,
           time,
           description,
@@ -124,6 +126,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                           insertControlToSupabase(
                                             control.uuId,
                                             control.doctorName!,
+                                            control.title,
                                             control.date!,
                                             control.time!,
                                             control.description!,

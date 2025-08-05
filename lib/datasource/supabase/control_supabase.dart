@@ -8,6 +8,7 @@ class ControlSupabase {
   Future<Either<Failure, bool>> insertControl(
     String uuId,
     String doctor_name,
+    String title,
     String date,
     String time,
     String description,
@@ -17,6 +18,7 @@ class ControlSupabase {
     try {
       await supabase.from('controls').insert({
         'uuId' : uuId,
+        'title': title,
         'doctor_name': doctor_name,
         'date': date,
         'time': time,

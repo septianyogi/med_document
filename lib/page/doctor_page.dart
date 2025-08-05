@@ -44,8 +44,16 @@ class _DoctorPageState extends ConsumerState<DoctorPage> {
     });
   }
 
+  syncDoctor() {
+    ref.read(doctorProvider.notifier).syncDoctorFromSupabase();
+    setState(() {
+      ref.read(doctorProvider.notifier).getDoctor();
+    });
+  }
+
   @override
   void initState() {
+    syncDoctor();
     super.initState();
   }
 

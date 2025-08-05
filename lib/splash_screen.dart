@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_document/config/app_color.dart';
 import 'package:med_document/page/dashboard/dashboard.dart';
 import 'package:med_document/page/login_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -40,7 +41,13 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Align(
         alignment: Alignment.center,
-        child: Container(child: Icon(Icons.document_scanner_outlined)),
+        child: Container(
+          child: Icon(
+            Icons.medical_information_outlined,
+            size: 75,
+            color: AppColor.primaryColor,
+          ),
+        ),
       ),
     );
   }

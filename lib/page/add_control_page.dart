@@ -17,6 +17,7 @@ class AddControlPage extends ConsumerStatefulWidget {
 
 class _AddControlPageState extends ConsumerState<AddControlPage> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController timeController = TextEditingController();
   String? doctorController;
@@ -30,6 +31,7 @@ class _AddControlPageState extends ConsumerState<AddControlPage> {
   Future<void> insertControl() async {
     final userId = ref.read(userProvider).value?.id ?? 1;
     final doctorName = doctorController ?? '';
+    final title = titleController.text ?? '';
     final date = currentDate;
     final time = timeController.text;
     final description = descriptionController.text;
@@ -40,6 +42,7 @@ class _AddControlPageState extends ConsumerState<AddControlPage> {
         .read(controlProvider.notifier)
         .insertControl(
           userId,
+          title,
           doctorName,
           date,
           time,
@@ -91,6 +94,32 @@ class _AddControlPageState extends ConsumerState<AddControlPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: timeController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Jam',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide(
+                        color: AppColor.primaryColor,
+                        width: 2,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: BorderSide(
+                        color: AppColor.primaryColor,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 Row(
                   children: [
                     Expanded(
@@ -126,6 +155,7 @@ class _AddControlPageState extends ConsumerState<AddControlPage> {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: timeController,

@@ -26,6 +26,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
 
   Future<void> insertControl(
     int userId,
+    String? title,
     String? doctorName,
     String? date,
     String? time,
@@ -40,6 +41,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
       final supabase = await _controlSupabase.insertControl(
         uuId,
         doctorName ?? '',
+        title ?? '',
         date ?? '',
         time ?? '',
         description ?? '',
@@ -54,6 +56,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
             ControlModel(
               uuId: uuId,
               userId: userId,
+              title: title ?? '',
               doctorName: doctorName ?? '',
               date: date ?? '',
               time: time ?? '',
@@ -81,6 +84,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
               ControlModel(
                 uuId: uuId,
                 userId: userId,
+                title: title ?? '',
                 doctorName: doctorName ?? '',
                 date: date ?? '',
                 time: time ?? '',

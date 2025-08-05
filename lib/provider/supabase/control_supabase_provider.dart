@@ -12,6 +12,7 @@ class ControlSupabaseNotifier
   Future<void> insertControl(
     String uuId,
     String? doctorName,
+    String? title,
     String? date,
     String? time,
     String? description,
@@ -23,6 +24,7 @@ class ControlSupabaseNotifier
       final control = await _controlSupabase.insertControl(
         uuId,
         doctorName ?? '',
+        title ?? '',
         date ?? '',
         time ?? '',
         description ?? '',

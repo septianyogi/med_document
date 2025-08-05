@@ -24,6 +24,40 @@ class DoctorNotifier extends StateNotifier<AsyncValue<List<DoctorModel>>> {
     }
   }
 
+  Future<void> syncDoctorFromSupabase() async {
+    try {
+      if (!mounted) return;
+      final localDoctors = await _databaseHelper.getDoctors();
+      if (localDoctors.isEmpty) {
+        final doctors = await _doctorSupabase.getDoctors();
+        doctors.fold(
+          (failure) {
+            state = AsyncValue.error(
+              failure.message ?? 'Unknown error',
+              StackTrace.current,
+            );
+          },
+          (result) async {
+            List<DoctorModel> doctor =
+                result.map((e) => DoctorModel.fromJson(e)).toList();
+            final syncResult = await _databaseHelper.insertDoctors(doctor);
+            if (syncResult) {
+              final updatedDoctors = await _databaseHelper.getDoctors();
+              state = AsyncValue.data(updatedDoctors);
+            } else {
+              state = AsyncValue.error(
+                'Failed to sync doctors',
+                StackTrace.current,
+              );
+            }
+          },
+        );
+      }
+    } catch (e) {
+      state = AsyncValue.error(e.toString(), StackTrace.current);
+    }
+  }
+
   Future<void> insertDoctor(String name, String specialty) async {
     try {
       if (!mounted) return;

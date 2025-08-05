@@ -4,6 +4,7 @@ class ControlModel {
   int? id;
   String uuId;
   int userId;
+  String? title;
   String? doctorName;
   String? date;
   String? time;
@@ -17,6 +18,7 @@ class ControlModel {
     this.id,
     required this.uuId,
     required this.userId,
+    this.title,
     this.doctorName,
     this.date,
     this.time,
@@ -32,6 +34,7 @@ class ControlModel {
       id: map['id'],
       uuId: map['uuId'],
       userId: map['userId'],
+      title: map['title'],
       doctorName: map['doctorName'],
       date: map['date'],
       time: map['time'],
@@ -47,6 +50,7 @@ class ControlModel {
       'id': id,
       'uuId': uuId,
       'userId': userId,
+      'title': title,
       'doctorName': doctorName,
       'date': date,
       'time': time,

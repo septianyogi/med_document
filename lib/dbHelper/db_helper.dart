@@ -68,6 +68,7 @@ class DatabaseHelper {
   CREATE TABLE controls (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     uuId TEXT NOT NULL,
+    title TEXT,
     userId INTEGER NOT NULL,
     doctorName TEXT,
     date TEXT,
@@ -156,6 +157,27 @@ class DatabaseHelper {
       return true;
     } catch (e) {
       print('Error inserting doctor: $e');
+      return false;
+    }
+  }
+
+  Future<bool> insertDoctors(List<DoctorModel> doctors) async {
+    try {
+      final db = await database;
+      for (var doctor in doctors) {
+        final data = doctor.toJson();
+        data['synced'] = 1;
+        await db.insert(
+          'doctors',
+          data,
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        print('Inserting doctor: ${doctor.toJson()}');
+      }
+      print('All doctors inserted successfully');
+      return true;
+    } catch (e) {
+      print('Error inserting doctors: $e');
       return false;
     }
   }
