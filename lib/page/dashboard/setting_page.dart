@@ -6,6 +6,7 @@ import 'package:med_document/page/login_page.dart';
 import 'package:med_document/provider/supabase/auth_supabase_provider.dart';
 import 'package:med_document/provider/user_provider.dart';
 import 'package:med_document/widget/button_widget.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../add_user_page.dart';
 
@@ -17,6 +18,9 @@ class SettingPage extends ConsumerStatefulWidget {
 }
 
 class _SettingPageState extends ConsumerState<SettingPage> {
+  final supabase = Supabase.instance.client;
+
+
   signOut() async {
     final response = await ref.read(authSupabaseProvider.notifier).signOut();
     if (response) {
@@ -111,6 +115,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                 return Center(child: Text('Error: $error'));
               },
             ),
+
             SizedBox(height: 20),
             Row(
               children: [

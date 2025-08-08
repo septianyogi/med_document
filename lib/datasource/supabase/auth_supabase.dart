@@ -5,9 +5,11 @@ import '../../config/failure.dart';
 
 class AuthSupabase {
   final supabase = Supabase.instance.client;
-  
+
   Future<Either<Failure, AuthResponse>> signUp(
     String username,
+    String rm,
+    String sex,
     String email,
     String password,
   ) async {
@@ -15,10 +17,18 @@ class AuthSupabase {
       final AuthResponse response = await supabase.auth.signUp(
         email: email,
         password: password,
-        data: {'username': username},
       );
       final Session? session = response.session;
       final User? user = response.user;
+
+      if (user != null) {
+        await supabase.from('users').insert({
+          'id': user.id,
+          'rm': rm,
+          'name': username,
+          'sex': sex,
+        });
+      }
       print('Response: $response');
       if (session != null) {
         print('Session created successfully: ${session.accessToken}');

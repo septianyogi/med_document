@@ -7,10 +7,22 @@ class AuthSupabaseNotifier extends StateNotifier<AsyncValue<void>> {
 
   final AuthSupabase _authSupabase = AuthSupabase();
 
-  Future<bool> signUp(String username, String email, String password) async {
+  Future<bool> signUp(
+    String username,
+    String rm,
+    String sex,
+    String email,
+    String password,
+  ) async {
     try {
       if (!mounted) return false;
-      final response = await _authSupabase.signUp(username, email, password);
+      final response = await _authSupabase.signUp(
+        username,
+        rm,
+        sex,
+        email,
+        password,
+      );
       bool success = false;
       response.fold(
         (failure) {

@@ -31,11 +31,11 @@ class DatabaseHelper {
     const userTable = '''
   CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    rm TEXT NOT NULL,
-    name TEXT NOT NULL,
-    sex TEXT NOT NULL,
-    dob TEXT NOT NULL,
-    address TEXT NOT NULL,
+    rm TEXT ,
+    name TEXT ,
+    sex TEXT ,
+    dob TEXT ,
+    address TEXT ,
     synced INTEGER DEFAULT 0
   )
   ''';
