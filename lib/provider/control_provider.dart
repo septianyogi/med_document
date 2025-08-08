@@ -181,7 +181,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
                     time: e['time'],
                     description: e['description'],
                     appointment: e['appointment'],
-                    rujuk: e['rujuk'],
+                    rujuk: e['rujuk'] == true ? 1 : 0,
                     synced: true,
                   );
                 }).toList();
@@ -199,39 +199,42 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
             }
           },
         );
-        final medicines = await _medicineSupabase.getMedicine();
-        medicines.fold(
-          (failure) {
-            state = AsyncValue.error(
-              'Failed to fetch medicines from Supabase',
-              StackTrace.current,
-            );
-          },
-          (result) async {
-            List<MedicineModel> medicineList =
-                result.map((e) {
-                  return MedicineModel(
-                    uuId: e['uuId'],
-                    name: e['name'],
-                    dosage: e['dosage'],
-                    frequency: e['frequency'],
-                    quantity: e['quantity'],
-                    controlId: e['control_id'],
-                    synced: true,
-                  );
-                }).toList();
-            final medicineResult = await _databaseHelper.insertMedicines(
-              medicineList,
-            );
-            if (medicineResult) {
-            } else {
+        final localMedicines = await _databaseHelper.getMedicines();
+        if (localMedicines.isEmpty) {
+          final medicines = await _medicineSupabase.getMedicine();
+          medicines.fold(
+            (failure) {
               state = AsyncValue.error(
-                'Failed to insert medicines from Supabase',
+                'Failed to fetch medicines from Supabase',
                 StackTrace.current,
               );
-            }
-          },
-        );
+            },
+            (result) async {
+              List<MedicineModel> medicineList =
+                  result.map((e) {
+                    return MedicineModel(
+                      uuId: e['uuId'],
+                      name: e['name'],
+                      dosage: e['dosage'],
+                      frequency: e['frequency'],
+                      quantity: e['quantity'],
+                      controlId: e['control_id'],
+                      synced: true,
+                    );
+                  }).toList();
+              final medicineResult = await _databaseHelper.insertMedicines(
+                medicineList,
+              );
+              if (medicineResult) {
+              } else {
+                state = AsyncValue.error(
+                  'Failed to insert medicines from Supabase',
+                  StackTrace.current,
+                );
+              }
+            },
+          );
+        }
       }
     } catch (e) {}
   }
