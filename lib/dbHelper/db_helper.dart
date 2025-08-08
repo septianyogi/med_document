@@ -279,6 +279,26 @@ class DatabaseHelper {
     }
   }
 
+  Future<bool> insertMedicines(List<MedicineModel> medicines) async {
+    try {
+      final db = await database;
+      for (var medicine in medicines) {
+        final data = medicine.toJson();
+        data['synced'] = 1;
+        await db.insert(
+          'medicines',
+          data,
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        print('Inserting medicine: ${medicine.toJson()}');
+      }
+      return true;
+    } catch (e) {
+      print('Error inserting medicines: $e');
+      return false;
+    }
+  }
+
   Future<List<MedicineModel>> getMedicines() async {
     try {
       final db = await database;
@@ -354,6 +374,26 @@ class DatabaseHelper {
       return true;
     } catch (e) {
       print('Error inserting control: $e');
+      return false;
+    }
+  }
+
+  Future<bool> insertControls(List<ControlModel> controls) async {
+    try {
+      final db = await database;
+      for (var control in controls) {
+        final data = control.toJson();
+        data['synced'] = 1;
+        await db.insert(
+          'controls',
+          data,
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        print('Inserting control: ${control.toJson()}');
+      }
+      return true;
+    } catch (e) {
+      print('Error inserting controls: $e');
       return false;
     }
   }
