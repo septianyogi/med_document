@@ -3,7 +3,7 @@ import 'package:med_document/model/medicine_model.dart';
 class ControlModel {
   int? id;
   String uuId;
-  int userId;
+  int? userId;
   String? title;
   String? doctorName;
   String? date;
@@ -17,7 +17,7 @@ class ControlModel {
   ControlModel({
     this.id,
     required this.uuId,
-    required this.userId,
+    this.userId,
     this.title,
     this.doctorName,
     this.date,
@@ -40,7 +40,12 @@ class ControlModel {
       time: map['time'],
       description: map['description'],
       appointment: map['appointment'],
-      rujuk: map['rujuk'] ?? 0,
+      rujuk:
+          map['rujuk'] is bool
+              ? map['rujuk']
+                  ? 1
+                  : 0
+              : map['rujuk'] ?? 0,
       synced: map['synced'] == 1,
     );
   }

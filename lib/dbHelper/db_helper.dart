@@ -69,7 +69,7 @@ class DatabaseHelper {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     uuId TEXT NOT NULL,
     title TEXT,
-    userId INTEGER NOT NULL,
+    userId INTEGER ,
     doctorName TEXT,
     date TEXT,
     time TEXT,

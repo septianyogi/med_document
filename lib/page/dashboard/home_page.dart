@@ -42,6 +42,19 @@ class _HomePageState extends ConsumerState<HomePage> {
         });
   }
 
+  syncControl(){
+    ref.read(controlProvider.notifier).syncControlsFromSupabase();
+    setState(() {
+      ref.read(controlProvider.notifier).getControl();
+    });
+  }
+
+  @override
+  void initState() {
+    syncControl();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final controlState = ref.watch(controlProvider);
@@ -105,7 +118,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '${control.doctorName!}',
+                                              '${control.doctorName}',
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: TextStyle(fontSize: 17),

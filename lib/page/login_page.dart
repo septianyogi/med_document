@@ -72,6 +72,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 SizedBox(height: 25),
                 TextFormField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: AppColor.whiteColor,
@@ -102,6 +104,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 SizedBox(height: 15),
                 TextFormField(
                   controller: passwordController,
+                  textInputAction: TextInputAction.send,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     filled: true,
