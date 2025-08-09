@@ -7,6 +7,8 @@ import 'package:med_document/page/detail_control.dart';
 import 'package:med_document/provider/control_provider.dart';
 import 'package:med_document/provider/supabase/control_supabase_provider.dart';
 
+import '../../provider/doctor_provider.dart';
+
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -42,16 +44,24 @@ class _HomePageState extends ConsumerState<HomePage> {
         });
   }
 
-  syncControl(){
+  syncControl() {
     ref.read(controlProvider.notifier).syncControlsFromSupabase();
     setState(() {
       ref.read(controlProvider.notifier).getControl();
     });
   }
 
+  syncDoctor() {
+    ref.read(doctorProvider.notifier).syncDoctorFromSupabase();
+    setState(() {
+      ref.read(doctorProvider.notifier).getDoctor();
+    });
+  }
+
   @override
   void initState() {
     syncControl();
+    syncDoctor();
     super.initState();
   }
 

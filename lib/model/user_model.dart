@@ -1,18 +1,18 @@
 class UserModel {
-  int? id;
-  String rm;
+  String? id;
+  int rm;
   String name;
-  String sex;
-  String dob;
-  String address;
+  String? sex;
+  String? dob;
+  String? address;
 
   UserModel({
     this.id,
     required this.rm,
     required this.name,
-    required this.sex,
-    required this.dob,
-    required this.address,
+    this.sex,
+    this.dob,
+    this.address,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> map) {

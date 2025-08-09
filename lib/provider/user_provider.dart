@@ -1,14 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_document/config/app_session.dart';
+import 'package:med_document/dbHelper/db_helper.dart';
 
 import '../model/user_model.dart';
 
 class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   UserNotifier() : super(const AsyncValue.loading());
 
+  DatabaseHelper _databaseHelper = DatabaseHelper.instance;
+
   Future<void> getUser() async {
     try {
-      final user = await AppSession.getUser();
+      final users = await _databaseHelper.getUsers();
+      final UserModel user = users.first;
       if (user != null) {
         state = AsyncValue.data(user);
       } else {
@@ -20,7 +24,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   }
 
   Future<void> setUser(
-    String rm,
+    int rm,
     String name,
     String sex,
     String dob,
@@ -28,7 +32,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   ) async {
     try {
       UserModel user = UserModel(
-        id: 1,
+        id: '1',
         rm: rm,
         name: name,
         sex: sex,
@@ -43,7 +47,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   }
 
   Future<void> updateUser(
-    String rm,
+    int rm,
     String name,
     String sex,
     String dob,

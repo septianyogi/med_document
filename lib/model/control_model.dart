@@ -3,7 +3,7 @@ import 'package:med_document/model/medicine_model.dart';
 class ControlModel {
   int? id;
   String uuId;
-  int? userId;
+  String? userId;
   String? title;
   String? doctorName;
   String? date;

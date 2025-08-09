@@ -30,7 +30,7 @@ class DatabaseHelper {
   Future _createDB(Database db, int version) async {
     const userTable = '''
   CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT PRIMARY KEY,
     rm TEXT ,
     name TEXT ,
     sex TEXT ,
@@ -93,15 +93,19 @@ class DatabaseHelper {
     _database = null;
   }
 
-  Future<int> insertUser(UserModel user) async {
+  Future<void> insertUser(UserModel user) async {
     try {
       final db = await database;
-      await db.insert('users', user.toJson());
-      print('Inserting user: ${user.toJson()}');
-      return 1;
+      await db.insert(
+        'users',
+        user.toJson(),
+        conflictAlgorithm:
+            ConflictAlgorithm.replace, // update kalau id sudah ada
+      );
+      print('✅ User inserted/updated: ${user.id}');
     } catch (e) {
-      print('Error inserting user: $e');
-      return 0;
+      print('❌ Error inserting user: $e');
+      rethrow;
     }
   }
 

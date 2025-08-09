@@ -29,7 +29,7 @@ class _AddControlPageState extends ConsumerState<AddControlPage> {
   String setDate = DateFormat("EEE, dd MMMM yyyy").format(DateTime.now());
 
   Future<void> insertControl() async {
-    final userId = ref.read(userProvider).value?.id ?? 1;
+    String userId =  '1';
     final doctorName = doctorController ?? '';
     final title = titleController.text ?? '';
     final date = currentDate;

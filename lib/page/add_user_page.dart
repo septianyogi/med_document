@@ -27,7 +27,7 @@ class _AddUserPageState extends ConsumerState<AddUserPage> {
   Future<void> insertUser() async {
     if (_formKey.currentState!.validate()) {
       final name = nameController.text.trim();
-      final rm = rmController.text.trim();
+      final rm = int.parse(rmController.text.trim());
       final address = addressController.text.trim();
 
       ref

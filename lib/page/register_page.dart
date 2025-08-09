@@ -82,6 +82,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     SizedBox(height: 25),
                     TextFormField(
                       controller: usernameController,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: 'Name',
                         filled: true,
@@ -112,6 +113,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     SizedBox(height: 15),
                     TextFormField(
                       controller: emailController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         labelText: 'Email',
                         filled: true,
@@ -142,6 +145,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     SizedBox(height: 15),
                     TextFormField(
                       controller: rmController,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: 'Nomor Rekam Medis',
                         filled: true,

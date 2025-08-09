@@ -29,7 +29,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
   }
 
   Future<void> insertControl(
-    int userId,
+    String userId,
     String? title,
     String? doctorName,
     String? date,
@@ -119,7 +119,7 @@ class ControlNotifier extends StateNotifier<AsyncValue<List<ControlModel>>> {
 
   Future<void> updateControl(
     String uuId,
-    int userId,
+    String userId,
     String? doctorName,
     String? date,
     String? time,

@@ -23,7 +23,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       String email = emailController.text;
       String password = passwordController.text;
 
-      // Simulate a sign-in process
       final response = await ref
           .read(authSupabaseProvider.notifier)
           .signIn(email, password);
@@ -45,6 +44,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColor.backgroundPrimaryColor,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
