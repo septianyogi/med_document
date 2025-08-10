@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:med_document/config/app_session.dart';
 import 'package:med_document/dbHelper/db_helper.dart';
 
 import '../../config/failure.dart';
@@ -83,6 +84,52 @@ class AuthSupabaseNotifier extends StateNotifier<AsyncValue<void>> {
   Future<bool> signIn(String email, String password) async {
     try {
       if (!mounted) return false;
+      final login = await _authSupabase.signIn(email, password);
+      login.fold(
+        (failure) {
+          state = AsyncError(
+            failure.message ?? 'Unknown error',
+            StackTrace.current,
+          );
+          return false;
+        },
+        (result) async {
+          if (result.session != null) {
+            print(
+              'Session created successfully Access Token: ${result.session?.accessToken}',
+            );
+            final user = await _authSupabase.getUser(result.session!.user.id);
+            user.fold(
+              (failure) {
+                print('Failed to fetch user data: ${failure.message}');
+              },
+              (result) async {
+                print('User fetched successfully: ${result}');
+                await AppSession.setUser(result);
+                return true;
+              },
+            );
+
+            state = const AsyncData(true);
+            return true;
+          } else {
+            print('No session created');
+            state = const AsyncData(false);
+            return false;
+          }
+        },
+      );
+      return true;
+    } catch (e) {
+      print('Error logging in: $e');
+      state = AsyncValue.error(e.toString(), StackTrace.current);
+      return false;
+    }
+  }
+
+  Future<bool> login(String email, String password) async {
+    try {
+      if (!mounted) return false;
 
       final loginResult = await _authSupabase.signIn(email, password);
 
@@ -116,7 +163,7 @@ class AuthSupabaseNotifier extends StateNotifier<AsyncValue<void>> {
           () => throw Exception('User not found'),
         );
         try {
-          await _databaseHelper.insertUser(user);
+          await AppSession.setUser(user);
           print('✅ User inserted/updated: ${user.id}');
           print('✅ User stored locally: ${user.id}');
         } catch (e) {

@@ -53,6 +53,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                 if (data == null) {
                   return const Center(child: Text('No user data found'));
                 }
+                print('User data: ${data.toJson()}');
                 return Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,6 +113,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                 return const Center(child: CircularProgressIndicator());
               },
               error: (error, stackTrace) {
+                print('Error fetching user data: $error');
                 return Center(child: Text('Error: $error'));
               },
             ),
